@@ -9,16 +9,18 @@ import EmployeeDashboard from "./pages/EmployeeDashboard.tsx";
 import TaxVault from "./pages/TaxVault.tsx";
 import Developers from "./pages/Developers.tsx";
 import NotFound from "./pages/NotFound.tsx";
+import { SolanaProvider } from "./providers/SolanaProvider";
 
 const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
+    <SolanaProvider>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/employer" element={<EmployerDashboard />} />
           <Route path="/employee" element={<EmployeeDashboard />} />
