@@ -73,8 +73,8 @@ const TaxVault = () => {
                   }}
                   labelStyle={{ color: "hsl(var(--foreground))" }}
                 />
-                <Area type="monotone" dataKey="earned" stroke="hsl(var(--primary))" fill="url(#g1)" strokeWidth={2} />
-                <Area type="monotone" dataKey="apy" stroke="hsl(var(--secondary))" fill="url(#g2)" strokeWidth={2} />
+                <Area type="monotone" dataKey="earned" stroke="hsl(var(--foreground))" fill="url(#g1)" strokeWidth={2} />
+                <Area type="monotone" dataKey="apy" stroke="hsl(var(--muted-foreground))" fill="url(#g2)" strokeWidth={2} strokeDasharray="4 4" />
               </AreaChart>
             </ResponsiveContainer>
           </div>
@@ -98,9 +98,9 @@ const TaxVault = () => {
             </GlowButton>
           </div>
 
-          <div className="mt-6 pt-6 border-t border-white/10 space-y-3 text-sm">
+          <div className="mt-6 pt-6 border-t border-foreground/10 space-y-3 text-sm">
             <div className="flex justify-between"><span className="text-muted-foreground">Strategy</span><span>Marginfi USDC</span></div>
-            <div className="flex justify-between"><span className="text-muted-foreground">Risk score</span><span className="text-secondary">Low</span></div>
+            <div className="flex justify-between"><span className="text-muted-foreground">Risk score</span><span className="font-medium">Low</span></div>
             <div className="flex justify-between"><span className="text-muted-foreground">Last rebalance</span><span>2h ago</span></div>
           </div>
         </GlassCard>

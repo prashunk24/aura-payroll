@@ -14,14 +14,14 @@ export const GlowButton = forwardRef<HTMLButtonElement, GlowButtonProps>(
 
     if (variant === "ghost") {
       return (
-        <button ref={ref} className={cn(base, sizeClass, "glass-subtle hover:bg-white/10 text-foreground", className)} {...props}>
+        <button ref={ref} className={cn(base, sizeClass, "glass-subtle hover:bg-foreground/5 text-foreground", className)} {...props}>
           {children}
         </button>
       );
     }
     if (variant === "outline") {
       return (
-        <button ref={ref} className={cn(base, sizeClass, "border border-white/20 bg-white/5 hover:bg-white/10 text-foreground backdrop-blur", className)} {...props}>
+        <button ref={ref} className={cn(base, sizeClass, "border border-foreground/15 bg-background hover:bg-muted text-foreground", className)} {...props}>
           {children}
         </button>
       );
@@ -29,10 +29,9 @@ export const GlowButton = forwardRef<HTMLButtonElement, GlowButtonProps>(
     return (
       <button
         ref={ref}
-        className={cn(base, sizeClass, "bg-gradient-primary text-primary-foreground hover:scale-[1.03] animate-pulse-glow", className)}
+        className={cn(base, sizeClass, "bg-primary text-primary-foreground hover:scale-[1.02] hover:shadow-[0_12px_40px_-8px_hsl(0_0%_0%/0.45)] shadow-[0_6px_20px_-6px_hsl(0_0%_0%/0.3)]", className)}
         {...props}
       >
-        <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/30 to-transparent group-hover:translate-x-full transition-transform duration-700" />
         <span className="relative z-10 flex items-center gap-2">{children}</span>
       </button>
     );
