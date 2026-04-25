@@ -20,7 +20,7 @@ export const GlassCard = forwardRef<HTMLDivElement, GlassCardProps>(
           variantClass,
           glowClass,
           hover && "hover-lift",
-          "rounded-3xl p-6",
+          "rounded-2xl sm:rounded-3xl p-4 sm:p-6",
           className
         )}
         {...props}
