@@ -126,7 +126,7 @@ const Landing = () => {
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {features.map((f, i) => (
             <GlassCard key={f.title} hover className="animate-fade-in-up" style={{ animationDelay: `${i * 60}ms` }}>
-              <div className="w-12 h-12 rounded-2xl bg-gradient-primary glow-primary flex items-center justify-center mb-4">
+              <div className="w-12 h-12 rounded-2xl bg-primary flex items-center justify-center mb-4">
                 <f.icon className="w-6 h-6 text-primary-foreground" />
               </div>
               <h3 className="text-lg font-semibold">{f.title}</h3>
