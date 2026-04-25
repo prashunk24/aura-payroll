@@ -58,7 +58,7 @@ const EmployerDashboard = () => {
           <div className="overflow-x-auto -mx-6 px-6">
             <table className="w-full text-sm">
               <thead>
-                <tr className="text-left text-xs uppercase tracking-wider text-muted-foreground border-b border-white/10">
+                <tr className="text-left text-xs uppercase tracking-wider text-muted-foreground border-b border-foreground/10">
                   <th className="py-3 pr-4 font-medium">Name</th>
                   <th className="py-3 pr-4 font-medium">Wallet</th>
                   <th className="py-3 pr-4 font-medium text-right">Salary</th>
@@ -67,7 +67,7 @@ const EmployerDashboard = () => {
               </thead>
               <tbody>
                 {mockEmployees.map((e) => (
-                  <tr key={e.id} className="border-b border-white/5 hover:bg-white/[0.03] transition-colors">
+                  <tr key={e.id} className="border-b border-foreground/5 hover:bg-foreground/[0.03] transition-colors">
                     <td className="py-4 pr-4">
                       <div className="font-medium">{e.name}</div>
                       <div className="text-xs text-muted-foreground">{e.role}</div>

@@ -27,7 +27,7 @@ const EndpointRow = ({ ep }: { ep: ApiEndpointMeta }) => {
 
   return (
     <div className="glass-subtle rounded-2xl overflow-hidden">
-      <button onClick={() => setOpen(!open)} className="w-full text-left p-4 flex items-center gap-4 hover:bg-white/[0.04] transition-colors">
+      <button onClick={() => setOpen(!open)} className="w-full text-left p-4 flex items-center gap-4 hover:bg-foreground/[0.04] transition-colors">
         <span className={`text-[10px] font-bold tracking-wider px-2.5 py-1 rounded-md border ${methodColor[ep.method]}`}>
           {ep.method}
         </span>
@@ -35,7 +35,7 @@ const EndpointRow = ({ ep }: { ep: ApiEndpointMeta }) => {
         <span className="text-xs text-muted-foreground hidden md:block max-w-md truncate">{ep.description}</span>
       </button>
       {open && (
-        <div className="border-t border-white/10 p-5 space-y-4 animate-fade-in">
+        <div className="border-t border-foreground/10 p-5 space-y-4 animate-fade-in">
           <div>
             <div className="flex items-center justify-between text-xs text-muted-foreground mb-1">
               <span>Full URL</span>
@@ -69,7 +69,7 @@ const Developers = () => (
     <div className="mb-10 animate-fade-in-up">
       <h1 className="text-4xl font-bold tracking-tight">Developer <span className="text-gradient">API</span></h1>
       <p className="text-muted-foreground mt-2 max-w-2xl">
-        All endpoints are configured in <code className="text-foreground bg-white/10 rounded px-1.5 py-0.5 text-xs">src/config/api.ts</code>.
+        All endpoints are configured in <code className="text-foreground bg-foreground/5 rounded px-1.5 py-0.5 text-xs">src/config/api.ts</code>.
         Edit a single file to repoint to your backend — UI components consume these constants.
       </p>
     </div>

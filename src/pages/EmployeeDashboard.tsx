@@ -36,7 +36,7 @@ const EmployeeDashboard = () => (
       <div className="overflow-x-auto -mx-6 px-6">
         <table className="w-full text-sm">
           <thead>
-            <tr className="text-left text-xs uppercase tracking-wider text-muted-foreground border-b border-white/10">
+            <tr className="text-left text-xs uppercase tracking-wider text-muted-foreground border-b border-foreground/10">
               <th className="py-3 pr-4 font-medium">Type</th>
               <th className="py-3 pr-4 font-medium">From</th>
               <th className="py-3 pr-4 font-medium">Date</th>
@@ -46,7 +46,7 @@ const EmployeeDashboard = () => (
           </thead>
           <tbody>
             {txs.map((t) => (
-              <tr key={t.id} className="border-b border-white/5 hover:bg-white/[0.03] transition-colors">
+              <tr key={t.id} className="border-b border-foreground/5 hover:bg-foreground/[0.03] transition-colors">
                 <td className="py-4 pr-4">
                   <span className="inline-flex items-center gap-2">
                     {t.amt >= 0 ? (

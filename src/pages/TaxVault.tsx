@@ -98,7 +98,7 @@ const TaxVault = () => {
             </GlowButton>
           </div>
 
-          <div className="mt-6 pt-6 border-t border-white/10 space-y-3 text-sm">
+          <div className="mt-6 pt-6 border-t border-foreground/10 space-y-3 text-sm">
             <div className="flex justify-between"><span className="text-muted-foreground">Strategy</span><span>Marginfi USDC</span></div>
             <div className="flex justify-between"><span className="text-muted-foreground">Risk score</span><span className="text-secondary">Low</span></div>
             <div className="flex justify-between"><span className="text-muted-foreground">Last rebalance</span><span>2h ago</span></div>
