@@ -30,14 +30,13 @@ export const GlassCard = forwardRef<HTMLDivElement, GlassCardProps>(
     return (
       <motion.div
         ref={ref}
-        {...motionProps}
+        {...props}
         className={cn(
           variantClass,
           glowClass,
           "rounded-2xl sm:rounded-3xl p-4 sm:p-6 will-change-transform",
           className
         )}
-        {...(props as HTMLMotionProps<"div">)}
       >
         {children}
       </motion.div>
