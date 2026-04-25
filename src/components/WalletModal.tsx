@@ -50,20 +50,13 @@ export const WalletModal = ({ open, onOpenChange }: WalletModalProps) => {
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
         className={cn(
-          "glass-strong border-white/10 sm:max-w-md p-0 overflow-hidden",
-          "shadow-[0_30px_120px_-20px_hsl(var(--primary)/0.6)]"
+          "glass-strong border-foreground/10 sm:max-w-md p-0 overflow-hidden",
+          "shadow-[0_30px_120px_-20px_hsl(0_0%_0%/0.35)]"
         )}
       >
-        {/* Decorative gradient blob */}
-        <div
-          className="pointer-events-none absolute -top-24 -right-24 h-56 w-56 rounded-full opacity-50 blur-3xl"
-          style={{ background: "var(--gradient-primary)" }}
-          aria-hidden
-        />
-
         <DialogHeader className="px-6 pt-6 pb-2 relative">
           <div className="flex items-center gap-3">
-            <span className="relative inline-flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-primary glow-primary">
+            <span className="relative inline-flex items-center justify-center w-10 h-10 rounded-xl bg-primary">
               <WalletIcon className="w-5 h-5 text-primary-foreground" />
             </span>
             <div>
