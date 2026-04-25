@@ -22,12 +22,12 @@ export const Navbar = () => {
       initial={{ y: -24, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-      className="sticky top-0 z-50 w-full pt-4 px-4"
+      className="sticky top-0 z-50 w-full pt-4 px-3 sm:px-4"
     >
       <nav
         className={cn(
-          "container flex items-center justify-between gap-2 sm:gap-3",
-          "rounded-[28px] px-2 sm:px-3 py-2",
+          "container flex items-center gap-2 h-14",
+          "rounded-full pl-2 pr-2",
           "bg-[hsl(0_0%_4%/0.85)] text-[hsl(0_0%_98%)]",
           "border border-[hsl(0_0%_100%/0.06)]",
           "backdrop-blur-2xl backdrop-saturate-150",
@@ -35,11 +35,11 @@ export const Navbar = () => {
         )}
       >
         {/* Brand */}
-        <Link to="/" className="flex items-center gap-2 pl-2 pr-1 shrink-0">
+        <Link to="/" className="flex items-center shrink-0">
           <motion.span
             whileHover={{ rotate: -8, scale: 1.05 }}
             transition={{ type: "spring", stiffness: 300, damping: 18 }}
-            className="relative inline-flex items-center justify-center w-8 h-8 rounded-2xl bg-[hsl(0_0%_100%)] text-[hsl(0_0%_4%)]"
+            className="relative inline-flex items-center justify-center w-10 h-10 rounded-full bg-[hsl(0_0%_100%)] text-[hsl(0_0%_4%)]"
           >
             <Coins className="w-4 h-4" />
           </motion.span>
@@ -48,8 +48,8 @@ export const Navbar = () => {
         {/* Search */}
         <div
           className={cn(
-            "hidden sm:flex items-center gap-2 flex-1 max-w-[260px]",
-            "h-10 px-3 rounded-2xl",
+            "hidden md:flex items-center gap-2 w-[220px] xl:w-[240px] shrink-0",
+            "h-10 px-3 rounded-full",
             "bg-[hsl(0_0%_100%/0.04)] border border-[hsl(0_0%_100%/0.06)]",
             "text-[hsl(0_0%_60%)]"
           )}
@@ -57,16 +57,16 @@ export const Navbar = () => {
           <Search className="w-4 h-4 shrink-0" />
           <input
             placeholder="Search..."
-            className="bg-transparent outline-none text-sm flex-1 placeholder:text-[hsl(0_0%_45%)] text-[hsl(0_0%_90%)]"
+            className="bg-transparent outline-none text-sm flex-1 min-w-0 placeholder:text-[hsl(0_0%_45%)] text-[hsl(0_0%_90%)]"
           />
-          <div className="hidden md:flex items-center gap-1 text-[10px]">
+          <div className="hidden xl:flex items-center gap-1 text-[10px] shrink-0">
             <kbd className="px-1.5 py-0.5 rounded-md bg-[hsl(0_0%_100%/0.06)] border border-[hsl(0_0%_100%/0.08)] font-mono">⌘</kbd>
             <kbd className="px-1.5 py-0.5 rounded-md bg-[hsl(0_0%_100%/0.06)] border border-[hsl(0_0%_100%/0.08)] font-mono">K</kbd>
           </div>
         </div>
 
         {/* Links with animated indicator */}
-        <ul className="hidden lg:flex items-center gap-1 mx-2">
+        <ul className="hidden lg:flex items-center gap-0.5 flex-1 justify-center min-w-0">
           {links.map((l) => {
             const isActive = activePath === l.to;
             return (
@@ -75,7 +75,7 @@ export const Navbar = () => {
                   to={l.to}
                   end={l.to === "/"}
                   className={cn(
-                    "relative inline-flex px-4 py-2 rounded-full text-sm font-medium transition-colors",
+                    "relative inline-flex items-center h-10 px-3 xl:px-4 rounded-full text-sm font-medium transition-colors whitespace-nowrap",
                     isActive
                       ? "text-[hsl(0_0%_100%)]"
                       : "text-[hsl(0_0%_60%)] hover:text-[hsl(0_0%_95%)]"
@@ -95,17 +95,20 @@ export const Navbar = () => {
           })}
         </ul>
 
+        {/* Spacer to push right cluster when links hidden */}
+        <div className="flex-1 lg:hidden" />
+
         {/* Right cluster */}
-        <div className="flex items-center gap-1 sm:gap-2 shrink-0 min-w-0">
-          <div className="hidden md:block w-px h-6 bg-[hsl(0_0%_100%/0.08)]" />
+        <div className="flex items-center gap-1 sm:gap-2 shrink-0">
           <motion.button
             whileHover={{ rotate: -15 }}
             whileTap={{ scale: 0.92 }}
-            className="hidden md:inline-flex items-center justify-center w-9 h-9 rounded-full text-[hsl(0_0%_70%)] hover:text-[hsl(0_0%_100%)] hover:bg-[hsl(0_0%_100%/0.06)] transition-colors"
+            className="hidden md:inline-flex items-center justify-center w-10 h-10 rounded-full text-[hsl(0_0%_70%)] hover:text-[hsl(0_0%_100%)] hover:bg-[hsl(0_0%_100%/0.06)] transition-colors shrink-0"
             aria-label="Toggle theme"
           >
             <Moon className="w-4 h-4" />
           </motion.button>
+          <div className="hidden md:block w-px h-6 bg-[hsl(0_0%_100%/0.08)]" />
           <WalletButton size="sm" />
         </div>
       </nav>

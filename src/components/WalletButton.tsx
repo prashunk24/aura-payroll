@@ -29,10 +29,10 @@ export const WalletButton = ({ className, size = "md" }: WalletButtonProps) => {
 
   const sizeClass =
     size === "sm"
-      ? "px-3 sm:px-4 py-2 text-xs sm:text-sm"
+      ? "h-10 px-3 sm:px-4 text-xs sm:text-sm"
       : size === "lg"
-      ? "px-8 py-4 text-base"
-      : "px-5 py-2.5 text-sm";
+      ? "h-14 px-8 text-base"
+      : "h-11 px-5 text-sm";
 
   return (
     <>
