@@ -146,9 +146,9 @@ const WalletRow = ({ name, icon, badge, installUrl, pending, onClick }: WalletRo
       disabled={pending}
       className={cn(
         "group w-full flex items-center justify-between gap-3 rounded-xl px-4 py-3",
-        "glass border border-white/10 hover:border-white/20",
+        "glass border border-foreground/10 hover:border-foreground/20",
         "transition-all duration-300",
-        "hover:scale-[1.01] hover:shadow-[0_0_28px_hsl(var(--primary)/0.35)]",
+        "hover:scale-[1.01] hover:shadow-[0_8px_24px_-8px_hsl(0_0%_0%/0.2)]",
         "disabled:opacity-60 disabled:cursor-not-allowed"
       )}
     >
@@ -164,14 +164,14 @@ const WalletRow = ({ name, icon, badge, installUrl, pending, onClick }: WalletRo
       </span>
       <span className="flex items-center gap-2">
         {pending ? (
-          <Loader2 className="w-4 h-4 animate-spin text-primary" />
+          <Loader2 className="w-4 h-4 animate-spin text-foreground" />
         ) : badge ? (
           <span
             className={cn(
-              "text-[10px] uppercase tracking-wider px-2 py-1 rounded-full",
+              "text-[10px] uppercase tracking-wider px-2 py-1 rounded-full border",
               isInstall
-                ? "bg-accent/10 text-accent border border-accent/20"
-                : "bg-secondary/10 text-secondary border border-secondary/20"
+                ? "bg-muted text-muted-foreground border-border"
+                : "bg-primary text-primary-foreground border-primary"
             )}
           >
             {isInstall && <Download className="inline w-3 h-3 mr-1 -mt-0.5" />}
