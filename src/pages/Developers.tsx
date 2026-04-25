@@ -27,12 +27,12 @@ const EndpointRow = ({ ep }: { ep: ApiEndpointMeta }) => {
 
   return (
     <div className="glass-subtle rounded-2xl overflow-hidden">
-      <button onClick={() => setOpen(!open)} className="w-full text-left p-4 flex items-center gap-4 hover:bg-foreground/[0.04] transition-colors">
-        <span className={`text-[10px] font-bold tracking-wider px-2.5 py-1 rounded-md border ${methodColor[ep.method]}`}>
+      <button onClick={() => setOpen(!open)} className="w-full text-left p-3 sm:p-4 flex items-center gap-2 sm:gap-4 hover:bg-foreground/[0.04] transition-colors">
+        <span className={`text-[10px] font-bold tracking-wider px-2 sm:px-2.5 py-1 rounded-md border shrink-0 ${methodColor[ep.method]}`}>
           {ep.method}
         </span>
-        <code className="font-mono text-sm flex-1 truncate">{ep.path}</code>
-        <span className="text-xs text-muted-foreground hidden md:block max-w-md truncate">{ep.description}</span>
+        <code className="font-mono text-xs sm:text-sm flex-1 truncate min-w-0">{ep.path}</code>
+        <span className="text-xs text-muted-foreground hidden lg:block max-w-md truncate">{ep.description}</span>
       </button>
       {open && (
         <div className="border-t border-foreground/10 p-5 space-y-4 animate-fade-in">
@@ -66,26 +66,26 @@ const EndpointRow = ({ ep }: { ep: ApiEndpointMeta }) => {
 
 const Developers = () => (
   <PageShell>
-    <div className="mb-10 animate-fade-in-up">
-      <h1 className="text-4xl font-bold tracking-tight">Developer <span className="text-gradient">API</span></h1>
-      <p className="text-muted-foreground mt-2 max-w-2xl">
+    <div className="mb-8 sm:mb-10 animate-fade-in-up">
+      <h1 className="text-3xl sm:text-4xl font-bold tracking-tight">Developer <span className="text-gradient">API</span></h1>
+      <p className="text-sm sm:text-base text-muted-foreground mt-2 max-w-2xl">
         All endpoints are configured in <code className="text-foreground bg-foreground/5 rounded px-1.5 py-0.5 text-xs">src/config/api.ts</code>.
         Edit a single file to repoint to your backend — UI components consume these constants.
       </p>
     </div>
 
-    <div className="grid md:grid-cols-3 gap-5 mb-8">
+    <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-5 mb-6 sm:mb-8">
       <GlassCard>
         <p className="text-xs text-muted-foreground">Base URL</p>
-        <p className="mt-1 font-mono text-sm break-all">{API_BASE_URL}</p>
+        <p className="mt-1 font-mono text-xs sm:text-sm break-all">{API_BASE_URL}</p>
       </GlassCard>
       <GlassCard>
         <p className="text-xs text-muted-foreground">Solana network</p>
-        <p className="mt-1 font-mono text-sm">{SOLANA_NETWORK}</p>
+        <p className="mt-1 font-mono text-xs sm:text-sm">{SOLANA_NETWORK}</p>
       </GlassCard>
-      <GlassCard>
+      <GlassCard className="sm:col-span-2 md:col-span-1">
         <p className="text-xs text-muted-foreground">RPC</p>
-        <p className="mt-1 font-mono text-sm break-all">{SOLANA_RPC}</p>
+        <p className="mt-1 font-mono text-xs sm:text-sm break-all">{SOLANA_RPC}</p>
       </GlassCard>
     </div>
 

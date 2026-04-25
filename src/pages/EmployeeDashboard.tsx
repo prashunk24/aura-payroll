@@ -14,12 +14,12 @@ const txs = [
 
 const EmployeeDashboard = () => (
   <PageShell>
-    <div className="mb-10 animate-fade-in-up">
-      <h1 className="text-4xl font-bold tracking-tight">My <span className="text-gradient">Earnings</span></h1>
-      <p className="text-muted-foreground mt-2">Track salary, tax, and bonuses paid to your wallet.</p>
+    <div className="mb-8 sm:mb-10 animate-fade-in-up">
+      <h1 className="text-3xl sm:text-4xl font-bold tracking-tight">My <span className="text-gradient">Earnings</span></h1>
+      <p className="text-sm sm:text-base text-muted-foreground mt-2">Track salary, tax, and bonuses paid to your wallet.</p>
     </div>
 
-    <div className="grid sm:grid-cols-3 gap-5 mb-8">
+    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-5 mb-6 sm:mb-8">
       <StatCard label="Salary received (YTD)" value="$21,600" delta={0} icon={Wallet} accent="primary" />
       <StatCard label="Tax deducted" value="$3,888" delta={0} icon={Receipt} accent="accent" />
       <StatCard label="Bonus earned" value="$1,400" delta={20} icon={Gift} accent="secondary" />
@@ -29,16 +29,16 @@ const EmployeeDashboard = () => (
       <div className="flex items-center justify-between mb-5">
         <div>
           <h2 className="text-lg font-semibold">Transaction history</h2>
-          <p className="text-xs text-muted-foreground">GET {API_ENDPOINTS.transactions.list}</p>
+          <p className="text-xs text-muted-foreground break-all">GET {API_ENDPOINTS.transactions.list}</p>
         </div>
       </div>
 
-      <div className="overflow-x-auto -mx-6 px-6">
+      <div className="overflow-x-auto -mx-4 sm:-mx-6 px-4 sm:px-6">
         <table className="w-full text-sm">
           <thead>
             <tr className="text-left text-xs uppercase tracking-wider text-muted-foreground border-b border-foreground/10">
               <th className="py-3 pr-4 font-medium">Type</th>
-              <th className="py-3 pr-4 font-medium">From</th>
+              <th className="py-3 pr-4 font-medium hidden sm:table-cell">From</th>
               <th className="py-3 pr-4 font-medium">Date</th>
               <th className="py-3 pr-4 font-medium text-right">Amount</th>
               <th className="py-3 font-medium text-right">Tx</th>
@@ -61,7 +61,7 @@ const EmployeeDashboard = () => (
                     {t.type}
                   </span>
                 </td>
-                <td className="py-4 pr-4 text-muted-foreground">{t.from}</td>
+                <td className="py-4 pr-4 text-muted-foreground hidden sm:table-cell">{t.from}</td>
                 <td className="py-4 pr-4 text-muted-foreground">{t.date}</td>
                 <td className={`py-4 pr-4 text-right font-semibold ${t.amt >= 0 ? "text-foreground" : "text-muted-foreground"}`}>
                   {t.amt >= 0 ? "+" : ""}${Math.abs(t.amt).toLocaleString()}

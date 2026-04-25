@@ -30,20 +30,20 @@ const EmployerDashboard = () => {
 
   return (
     <PageShell>
-      <div className="mb-10 animate-fade-in-up">
-        <h1 className="text-4xl font-bold tracking-tight">Employer <span className="text-gradient">Dashboard</span></h1>
-        <p className="text-muted-foreground mt-2">Manage payroll, tax, and treasury yield in one place.</p>
+      <div className="mb-8 sm:mb-10 animate-fade-in-up">
+        <h1 className="text-3xl sm:text-4xl font-bold tracking-tight">Employer <span className="text-gradient">Dashboard</span></h1>
+        <p className="text-sm sm:text-base text-muted-foreground mt-2">Manage payroll, tax, and treasury yield in one place.</p>
       </div>
 
       {/* Stats */}
-      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5 mb-6 sm:mb-8">
         <StatCard label="Monthly payroll" value="$184,200" delta={4.2} icon={Wallet} accent="primary" />
         <StatCard label="Tax withheld" value="$33,156" delta={4.2} icon={Receipt} accent="accent" />
         <StatCard label="Vault yield (YTD)" value="$8,412" delta={12.8} icon={TrendingUp} accent="secondary" />
         <StatCard label="Active employees" value="44" delta={2.3} icon={Users} accent="primary" />
       </div>
 
-      <div className="grid lg:grid-cols-3 gap-6">
+      <div className="grid lg:grid-cols-3 gap-4 sm:gap-6">
         {/* Employees */}
         <GlassCard className="lg:col-span-2">
           <div className="flex items-center justify-between mb-5">
@@ -55,12 +55,12 @@ const EmployerDashboard = () => {
               <Plus className="w-4 h-4" /> Add
             </GlowButton>
           </div>
-          <div className="overflow-x-auto -mx-6 px-6">
+          <div className="overflow-x-auto -mx-4 sm:-mx-6 px-4 sm:px-6">
             <table className="w-full text-sm">
               <thead>
                 <tr className="text-left text-xs uppercase tracking-wider text-muted-foreground border-b border-foreground/10">
                   <th className="py-3 pr-4 font-medium">Name</th>
-                  <th className="py-3 pr-4 font-medium">Wallet</th>
+                  <th className="py-3 pr-4 font-medium hidden sm:table-cell">Wallet</th>
                   <th className="py-3 pr-4 font-medium text-right">Salary</th>
                   <th className="py-3 font-medium text-right">Action</th>
                 </tr>
@@ -72,7 +72,7 @@ const EmployerDashboard = () => {
                       <div className="font-medium">{e.name}</div>
                       <div className="text-xs text-muted-foreground">{e.role}</div>
                     </td>
-                    <td className="py-4 pr-4 font-mono text-xs text-muted-foreground">{e.wallet}</td>
+                    <td className="py-4 pr-4 font-mono text-xs text-muted-foreground hidden sm:table-cell">{e.wallet}</td>
                     <td className="py-4 pr-4 text-right font-semibold">${e.salary.toLocaleString()}</td>
                     <td className="py-4 text-right">
                       <button className="text-xs font-semibold text-foreground hover:underline underline-offset-4">Pay now</button>
@@ -113,7 +113,7 @@ const EmployerDashboard = () => {
       </div>
 
       {/* Tax settings */}
-      <GlassCard className="mt-6">
+      <GlassCard className="mt-4 sm:mt-6">
         <div className="flex items-center gap-3 mb-5">
           <div className="w-10 h-10 rounded-xl bg-primary text-primary-foreground flex items-center justify-center">
             <Settings2 className="w-5 h-5" />

@@ -18,21 +18,21 @@ const Landing = () => {
   return (
     <PageShell>
       {/* HERO */}
-      <section className="relative pt-10 md:pt-20 pb-24">
-        <div className="grid lg:grid-cols-12 gap-10 items-center">
+      <section className="relative pt-6 sm:pt-10 md:pt-20 pb-16 sm:pb-24">
+        <div className="grid lg:grid-cols-12 gap-8 sm:gap-10 items-center">
           <div className="lg:col-span-7 animate-fade-in-up">
-            <span className="inline-flex items-center gap-2 glass-subtle rounded-full px-4 py-1.5 text-xs font-medium text-muted-foreground border border-foreground/10">
+            <span className="inline-flex items-center gap-2 glass-subtle rounded-full px-3 sm:px-4 py-1.5 text-[11px] sm:text-xs font-medium text-muted-foreground border border-foreground/10">
               <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
               Live on Solana mainnet
             </span>
-            <h1 className="mt-6 text-5xl md:text-7xl font-bold tracking-tight leading-[1.05]">
+            <h1 className="mt-5 sm:mt-6 text-4xl sm:text-5xl md:text-7xl font-bold tracking-tight leading-[1.05]">
               Payroll, <span className="text-gradient">reinvented</span> on-chain.
             </h1>
-            <p className="mt-6 text-lg text-muted-foreground max-w-xl leading-relaxed">
+            <p className="mt-4 sm:mt-6 text-base sm:text-lg text-muted-foreground max-w-xl leading-relaxed">
               SolPay automates global salaries, tax withholding, and treasury yield — in one
               non-custodial dashboard built on Solana.
             </p>
-            <div className="mt-8 flex flex-wrap items-center gap-4">
+            <div className="mt-6 sm:mt-8 flex flex-wrap items-center gap-3 sm:gap-4">
               <WalletButton size="lg" />
               <Link to="/employer">
                 <GlowButton variant="outline" size="lg">
@@ -41,15 +41,15 @@ const Landing = () => {
               </Link>
             </div>
 
-            <div className="mt-12 grid grid-cols-3 gap-6 max-w-md">
+            <div className="mt-10 sm:mt-12 grid grid-cols-3 gap-4 sm:gap-6 max-w-md">
               {[
                 { v: "$24M+", l: "Settled" },
                 { v: "12k", l: "Wallets paid" },
                 { v: "0.0004s", l: "Avg finality" },
               ].map((s) => (
                 <div key={s.l}>
-                  <p className="text-2xl font-bold text-gradient">{s.v}</p>
-                  <p className="text-xs text-muted-foreground mt-1">{s.l}</p>
+                  <p className="text-xl sm:text-2xl font-bold text-gradient">{s.v}</p>
+                  <p className="text-[11px] sm:text-xs text-muted-foreground mt-1">{s.l}</p>
                 </div>
               ))}
             </div>
@@ -59,12 +59,12 @@ const Landing = () => {
           <div className="lg:col-span-5 relative animate-scale-in">
             <div className="float">
               <GlassCard variant="strong" glow="primary" className="relative">
-                <div className="flex items-center justify-between">
-                  <div>
+                <div className="flex items-center justify-between gap-3">
+                  <div className="min-w-0">
                     <p className="text-xs uppercase tracking-wider text-muted-foreground">Next Payroll</p>
-                    <p className="mt-1 text-3xl font-bold">$184,200<span className="text-base text-muted-foreground"> USDC</span></p>
+                    <p className="mt-1 text-2xl sm:text-3xl font-bold truncate">$184,200<span className="text-sm sm:text-base text-muted-foreground"> USDC</span></p>
                   </div>
-                  <span className="rounded-full px-3 py-1 text-xs bg-primary text-primary-foreground font-medium">In 2h 14m</span>
+                  <span className="rounded-full px-2.5 sm:px-3 py-1 text-[11px] sm:text-xs bg-primary text-primary-foreground font-medium shrink-0">In 2h 14m</span>
                 </div>
 
                 <div className="mt-6 space-y-3">
@@ -97,7 +97,7 @@ const Landing = () => {
             </div>
 
             {/* Floating mini cards */}
-            <GlassCard variant="subtle" className="absolute -top-6 -left-10 hidden md:block float" style={{ animationDelay: "1.5s" }}>
+            <GlassCard variant="subtle" className="absolute -top-6 -left-4 lg:-left-10 hidden md:block float" style={{ animationDelay: "1.5s" }}>
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center">
                   <TrendingUp className="w-5 h-5 text-primary-foreground" />
@@ -113,23 +113,23 @@ const Landing = () => {
       </section>
 
       {/* FEATURES */}
-      <section className="py-20">
-        <div className="text-center max-w-2xl mx-auto mb-14">
-          <h2 className="text-4xl md:text-5xl font-bold tracking-tight">
+      <section className="py-12 sm:py-20">
+        <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-14">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight">
             Built for the <span className="text-gradient">on-chain era</span>
           </h2>
-          <p className="mt-4 text-muted-foreground">
+          <p className="mt-3 sm:mt-4 text-sm sm:text-base text-muted-foreground">
             Everything finance teams need — composable, transparent, programmable.
           </p>
         </div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {features.map((f, i) => (
             <GlassCard key={f.title} hover className="animate-fade-in-up" style={{ animationDelay: `${i * 60}ms` }}>
-              <div className="w-12 h-12 rounded-2xl bg-primary flex items-center justify-center mb-4">
-                <f.icon className="w-6 h-6 text-primary-foreground" />
+              <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-primary flex items-center justify-center mb-4">
+                <f.icon className="w-5 h-5 sm:w-6 sm:h-6 text-primary-foreground" />
               </div>
-              <h3 className="text-lg font-semibold">{f.title}</h3>
+              <h3 className="text-base sm:text-lg font-semibold">{f.title}</h3>
               <p className="mt-2 text-sm text-muted-foreground leading-relaxed">{f.desc}</p>
             </GlassCard>
           ))}
@@ -137,16 +137,16 @@ const Landing = () => {
       </section>
 
       {/* CTA */}
-      <section className="py-20">
-        <div className="ink-panel rounded-3xl text-center py-16 px-6 relative overflow-hidden">
+      <section className="py-12 sm:py-20">
+        <div className="ink-panel rounded-3xl text-center py-12 sm:py-16 px-5 sm:px-6 relative overflow-hidden">
           <div className="absolute inset-0 dot-grid opacity-20" aria-hidden />
-          <h3 className="relative text-3xl md:text-5xl font-bold tracking-tight text-gradient-invert">
+          <h3 className="relative text-2xl sm:text-3xl md:text-5xl font-bold tracking-tight text-gradient-invert">
             Pay your team in 60 seconds.
           </h3>
-          <p className="relative mt-4 text-white/70 max-w-xl mx-auto">
+          <p className="relative mt-3 sm:mt-4 text-sm sm:text-base text-white/70 max-w-xl mx-auto">
             Connect your Solana wallet, import employees, send payroll. That's it.
           </p>
-          <div className="relative mt-8 flex justify-center">
+          <div className="relative mt-6 sm:mt-8 flex justify-center">
             <WalletButton size="lg" />
           </div>
         </div>
