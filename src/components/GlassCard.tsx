@@ -1,8 +1,8 @@
 import { cn } from "@/lib/utils";
-import { forwardRef, HTMLAttributes } from "react";
+import { forwardRef } from "react";
 import { motion, HTMLMotionProps } from "framer-motion";
 
-interface GlassCardProps extends Omit<HTMLAttributes<HTMLDivElement>, keyof HTMLMotionProps<"div">> {
+interface GlassCardProps extends HTMLMotionProps<"div"> {
   variant?: "default" | "strong" | "subtle";
   glow?: "none" | "primary" | "secondary" | "accent";
   hover?: boolean;
