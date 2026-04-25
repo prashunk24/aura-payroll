@@ -138,16 +138,18 @@ const Landing = () => {
 
       {/* CTA */}
       <section className="py-20">
-        <GlassCard variant="strong" glow="primary" className="text-center py-16 px-6 relative overflow-hidden">
-          <div className="absolute inset-0 -z-10 opacity-40" style={{ background: "var(--gradient-primary)", filter: "blur(80px)" }} />
-          <h3 className="text-3xl md:text-5xl font-bold tracking-tight">Pay your team in 60 seconds.</h3>
-          <p className="mt-4 text-muted-foreground max-w-xl mx-auto">
+        <div className="ink-panel rounded-3xl text-center py-16 px-6 relative overflow-hidden">
+          <div className="absolute inset-0 dot-grid opacity-20" aria-hidden />
+          <h3 className="relative text-3xl md:text-5xl font-bold tracking-tight text-gradient-invert">
+            Pay your team in 60 seconds.
+          </h3>
+          <p className="relative mt-4 text-white/70 max-w-xl mx-auto">
             Connect your Solana wallet, import employees, send payroll. That's it.
           </p>
-          <div className="mt-8 flex justify-center">
+          <div className="relative mt-8 flex justify-center">
             <WalletButton size="lg" />
           </div>
-        </GlassCard>
+        </div>
       </section>
     </PageShell>
   );
