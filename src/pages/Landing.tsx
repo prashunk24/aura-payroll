@@ -69,9 +69,9 @@ const Landing = () => {
 
                 <div className="mt-6 space-y-3">
                   {[
-                    { name: "Engineering", count: 24, amt: 92400, color: "from-primary to-secondary" },
-                    { name: "Design", count: 8, amt: 38000, color: "from-secondary to-accent" },
-                    { name: "Operations", count: 12, amt: 53800, color: "from-accent to-primary" },
+                    { name: "Engineering", count: 24, amt: 92400 },
+                    { name: "Design", count: 8, amt: 38000 },
+                    { name: "Operations", count: 12, amt: 53800 },
                   ].map((d) => (
                     <div key={d.name} className="glass-subtle rounded-2xl p-4">
                       <div className="flex justify-between items-center text-sm">
@@ -79,8 +79,8 @@ const Landing = () => {
                         <span className="text-muted-foreground">{d.count} wallets</span>
                       </div>
                       <div className="mt-2 flex justify-between items-center">
-                        <div className="flex-1 h-1.5 rounded-full bg-white/5 mr-3 overflow-hidden">
-                          <div className={`h-full bg-gradient-to-r ${d.color} rounded-full`} style={{ width: `${(d.amt/92400)*100}%` }} />
+                        <div className="flex-1 h-1.5 rounded-full bg-foreground/5 mr-3 overflow-hidden">
+                          <div className="h-full bg-primary rounded-full" style={{ width: `${(d.amt/92400)*100}%` }} />
                         </div>
                         <span className="text-sm font-semibold">${d.amt.toLocaleString()}</span>
                       </div>
