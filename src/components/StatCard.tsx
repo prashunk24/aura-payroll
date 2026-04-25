@@ -12,7 +12,7 @@ interface StatCardProps {
 
 export const StatCard = ({ label, value, delta, icon: Icon }: StatCardProps) => {
   return (
-    <GlassCard hover className="relative">
+    <GlassCard hover className="relative group">
       <div className="absolute -top-px left-6 right-6 h-px bg-gradient-to-r from-foreground/30 to-transparent" />
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
@@ -28,7 +28,7 @@ export const StatCard = ({ label, value, delta, icon: Icon }: StatCardProps) => 
           )}
         </div>
         {Icon && (
-          <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl sm:rounded-2xl flex items-center justify-center bg-primary text-primary-foreground shrink-0">
+          <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl sm:rounded-2xl flex items-center justify-center bg-primary text-primary-foreground shrink-0 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3">
             <Icon className="w-4 h-4 sm:w-5 sm:h-5" />
           </div>
         )}
