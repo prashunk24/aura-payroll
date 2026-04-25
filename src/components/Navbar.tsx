@@ -26,8 +26,8 @@ export const Navbar = () => {
     >
       <nav
         className={cn(
-          "container flex items-center justify-between gap-3",
-          "rounded-[28px] px-3 py-2",
+          "container flex items-center justify-between gap-2 sm:gap-3",
+          "rounded-[28px] px-2 sm:px-3 py-2",
           "bg-[hsl(0_0%_4%/0.85)] text-[hsl(0_0%_98%)]",
           "border border-[hsl(0_0%_100%/0.06)]",
           "backdrop-blur-2xl backdrop-saturate-150",
@@ -66,7 +66,7 @@ export const Navbar = () => {
         </div>
 
         {/* Links with animated indicator */}
-        <ul className="hidden md:flex items-center gap-1 mx-2">
+        <ul className="hidden lg:flex items-center gap-1 mx-2">
           {links.map((l) => {
             const isActive = activePath === l.to;
             return (
@@ -96,12 +96,12 @@ export const Navbar = () => {
         </ul>
 
         {/* Right cluster */}
-        <div className="flex items-center gap-2 shrink-0">
-          <div className="hidden sm:block w-px h-6 bg-[hsl(0_0%_100%/0.08)]" />
+        <div className="flex items-center gap-1 sm:gap-2 shrink-0 min-w-0">
+          <div className="hidden md:block w-px h-6 bg-[hsl(0_0%_100%/0.08)]" />
           <motion.button
             whileHover={{ rotate: -15 }}
             whileTap={{ scale: 0.92 }}
-            className="hidden sm:inline-flex items-center justify-center w-9 h-9 rounded-full text-[hsl(0_0%_70%)] hover:text-[hsl(0_0%_100%)] hover:bg-[hsl(0_0%_100%/0.06)] transition-colors"
+            className="hidden md:inline-flex items-center justify-center w-9 h-9 rounded-full text-[hsl(0_0%_70%)] hover:text-[hsl(0_0%_100%)] hover:bg-[hsl(0_0%_100%/0.06)] transition-colors"
             aria-label="Toggle theme"
           >
             <Moon className="w-4 h-4" />
