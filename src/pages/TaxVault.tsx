@@ -29,26 +29,26 @@ const TaxVault = () => {
 
   return (
     <PageShell>
-      <div className="mb-10 animate-fade-in-up">
-        <h1 className="text-4xl font-bold tracking-tight">Tax <span className="text-gradient">Vault</span></h1>
-        <p className="text-muted-foreground mt-2">Idle tax reserves earn yield through audited DeFi strategies.</p>
+      <div className="mb-8 sm:mb-10 animate-fade-in-up">
+        <h1 className="text-3xl sm:text-4xl font-bold tracking-tight">Tax <span className="text-gradient">Vault</span></h1>
+        <p className="text-sm sm:text-base text-muted-foreground mt-2">Idle tax reserves earn yield through audited DeFi strategies.</p>
       </div>
 
-      <div className="grid sm:grid-cols-3 gap-5 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-5 mb-6 sm:mb-8">
         <StatCard label="Vault balance" value="$524,180" delta={6.4} icon={Vault} accent="primary" />
         <StatCard label="Current APY" value="5.42%" delta={0.4} icon={TrendingUp} accent="secondary" />
         <StatCard label="Yield earned (YTD)" value="$8,412" delta={12.8} icon={PiggyBank} accent="accent" />
       </div>
 
-      <div className="grid lg:grid-cols-3 gap-6">
+      <div className="grid lg:grid-cols-3 gap-4 sm:gap-6">
         <GlassCard className="lg:col-span-2">
           <div className="flex items-center justify-between mb-4">
             <div>
               <h2 className="text-lg font-semibold">Yield analytics</h2>
-              <p className="text-xs text-muted-foreground">GET {API_ENDPOINTS.tax.yield}</p>
+              <p className="text-xs text-muted-foreground break-all">GET {API_ENDPOINTS.tax.yield}</p>
             </div>
           </div>
-          <div className="h-[320px] w-full">
+          <div className="h-[260px] sm:h-[320px] w-full">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={yieldData} margin={{ left: -10, right: 10, top: 10 }}>
                 <defs>
