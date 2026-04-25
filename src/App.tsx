@@ -21,16 +21,17 @@ const App = () => (
         <Sonner />
         <BrowserRouter>
           <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/employer" element={<EmployerDashboard />} />
-          <Route path="/employee" element={<EmployeeDashboard />} />
-          <Route path="/vault" element={<TaxVault />} />
-          <Route path="/developers" element={<Developers />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
+            <Route path="/" element={<Index />} />
+            <Route path="/employer" element={<EmployerDashboard />} />
+            <Route path="/employee" element={<EmployeeDashboard />} />
+            <Route path="/vault" element={<TaxVault />} />
+            <Route path="/developers" element={<Developers />} />
+            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </TooltipProvider>
+    </SolanaProvider>
   </QueryClientProvider>
 );
 
