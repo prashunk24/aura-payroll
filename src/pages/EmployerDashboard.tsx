@@ -75,7 +75,7 @@ const EmployerDashboard = () => {
                     <td className="py-4 pr-4 font-mono text-xs text-muted-foreground">{e.wallet}</td>
                     <td className="py-4 pr-4 text-right font-semibold">${e.salary.toLocaleString()}</td>
                     <td className="py-4 text-right">
-                      <button className="text-xs text-secondary hover:underline">Pay now</button>
+                      <button className="text-xs font-semibold text-foreground hover:underline underline-offset-4">Pay now</button>
                     </td>
                   </tr>
                 ))}
@@ -115,7 +115,7 @@ const EmployerDashboard = () => {
       {/* Tax settings */}
       <GlassCard className="mt-6">
         <div className="flex items-center gap-3 mb-5">
-          <div className="w-10 h-10 rounded-xl glass-subtle flex items-center justify-center text-accent">
+          <div className="w-10 h-10 rounded-xl bg-primary text-primary-foreground flex items-center justify-center">
             <Settings2 className="w-5 h-5" />
           </div>
           <div>

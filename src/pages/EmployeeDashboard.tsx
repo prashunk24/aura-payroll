@@ -50,11 +50,11 @@ const EmployeeDashboard = () => (
                 <td className="py-4 pr-4">
                   <span className="inline-flex items-center gap-2">
                     {t.amt >= 0 ? (
-                      <span className="w-7 h-7 rounded-lg bg-secondary/10 text-secondary flex items-center justify-center">
+                      <span className="w-7 h-7 rounded-lg bg-primary text-primary-foreground flex items-center justify-center">
                         <ArrowDownLeft className="w-3.5 h-3.5" />
                       </span>
                     ) : (
-                      <span className="w-7 h-7 rounded-lg bg-accent/10 text-accent flex items-center justify-center">
+                      <span className="w-7 h-7 rounded-lg bg-muted text-foreground flex items-center justify-center border border-border">
                         <ArrowUpRight className="w-3.5 h-3.5" />
                       </span>
                     )}
@@ -63,11 +63,11 @@ const EmployeeDashboard = () => (
                 </td>
                 <td className="py-4 pr-4 text-muted-foreground">{t.from}</td>
                 <td className="py-4 pr-4 text-muted-foreground">{t.date}</td>
-                <td className={`py-4 pr-4 text-right font-semibold ${t.amt >= 0 ? "text-foreground" : "text-accent"}`}>
+                <td className={`py-4 pr-4 text-right font-semibold ${t.amt >= 0 ? "text-foreground" : "text-muted-foreground"}`}>
                   {t.amt >= 0 ? "+" : ""}${Math.abs(t.amt).toLocaleString()}
                 </td>
                 <td className="py-4 text-right">
-                  <a className="inline-flex items-center gap-1 text-xs text-secondary hover:underline" href="#">
+                  <a className="inline-flex items-center gap-1 text-xs font-medium text-foreground hover:underline underline-offset-4" href="#">
                     {t.id} <ExternalLink className="w-3 h-3" />
                   </a>
                 </td>

@@ -64,7 +64,7 @@ const Landing = () => {
                     <p className="text-xs uppercase tracking-wider text-muted-foreground">Next Payroll</p>
                     <p className="mt-1 text-3xl font-bold">$184,200<span className="text-base text-muted-foreground"> USDC</span></p>
                   </div>
-                  <span className="glass-subtle rounded-full px-3 py-1 text-xs text-secondary">In 2h 14m</span>
+                  <span className="rounded-full px-3 py-1 text-xs bg-primary text-primary-foreground font-medium">In 2h 14m</span>
                 </div>
 
                 <div className="mt-6 space-y-3">

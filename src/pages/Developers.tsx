@@ -6,11 +6,11 @@ import { useState } from "react";
 import { toast } from "sonner";
 
 const methodColor: Record<string, string> = {
-  GET: "text-secondary border-secondary/40 bg-secondary/10",
-  POST: "text-primary border-primary/40 bg-primary/10",
-  PUT: "text-accent border-accent/40 bg-accent/10",
-  DELETE: "text-destructive border-destructive/40 bg-destructive/10",
-  PATCH: "text-accent border-accent/40 bg-accent/10",
+  GET: "text-foreground border-foreground/30 bg-muted",
+  POST: "text-primary-foreground border-primary bg-primary",
+  PUT: "text-foreground border-foreground/30 bg-muted",
+  DELETE: "text-destructive-foreground border-destructive bg-destructive",
+  PATCH: "text-foreground border-foreground/30 bg-muted",
 };
 
 const EndpointRow = ({ ep }: { ep: ApiEndpointMeta }) => {
