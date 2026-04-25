@@ -21,8 +21,8 @@ const Landing = () => {
       <section className="relative pt-10 md:pt-20 pb-24">
         <div className="grid lg:grid-cols-12 gap-10 items-center">
           <div className="lg:col-span-7 animate-fade-in-up">
-            <span className="inline-flex items-center gap-2 glass-subtle rounded-full px-4 py-1.5 text-xs font-medium text-muted-foreground">
-              <span className="w-1.5 h-1.5 rounded-full bg-secondary animate-pulse" />
+            <span className="inline-flex items-center gap-2 glass-subtle rounded-full px-4 py-1.5 text-xs font-medium text-muted-foreground border border-foreground/10">
+              <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
               Live on Solana mainnet
             </span>
             <h1 className="mt-6 text-5xl md:text-7xl font-bold tracking-tight leading-[1.05]">
