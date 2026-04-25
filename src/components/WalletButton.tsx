@@ -28,7 +28,11 @@ export const WalletButton = ({ className, size = "md" }: WalletButtonProps) => {
   };
 
   const sizeClass =
-    size === "sm" ? "px-4 py-2 text-sm" : size === "lg" ? "px-8 py-4 text-base" : "px-5 py-2.5 text-sm";
+    size === "sm"
+      ? "px-3 sm:px-4 py-2 text-xs sm:text-sm"
+      : size === "lg"
+      ? "px-8 py-4 text-base"
+      : "px-5 py-2.5 text-sm";
 
   return (
     <>
@@ -36,7 +40,7 @@ export const WalletButton = ({ className, size = "md" }: WalletButtonProps) => {
         onClick={handle}
         disabled={status === "connecting"}
         className={cn(
-          "group relative inline-flex items-center gap-2 rounded-full font-medium",
+          "group relative inline-flex items-center gap-2 rounded-full font-medium shrink-0 max-w-full",
           isConnected
             ? "glass-strong text-foreground border border-foreground/10"
             : "bg-primary text-primary-foreground",
@@ -48,17 +52,28 @@ export const WalletButton = ({ className, size = "md" }: WalletButtonProps) => {
           className
         )}
       >
-        <span className="relative z-10 flex items-center gap-2">
+        <span className="relative z-10 flex items-center gap-2 min-w-0">
           {status === "connecting" ? (
-            <Loader2 className="w-4 h-4 animate-spin" />
+            <Loader2 className="w-4 h-4 animate-spin shrink-0" />
           ) : isConnected ? (
-            <LogOut className="w-4 h-4" />
+            <LogOut className="w-4 h-4 shrink-0" />
           ) : walletIcon ? (
-            <img src={walletIcon} alt="" className="w-4 h-4 rounded-sm" />
+            <img src={walletIcon} alt="" className="w-4 h-4 rounded-sm shrink-0" />
           ) : (
-            <Wallet className="w-4 h-4" />
+            <Wallet className="w-4 h-4 shrink-0" />
           )}
-          {status === "connecting" ? "Connecting…" : isConnected ? short : "Connect Wallet"}
+          <span className="truncate">
+            {status === "connecting"
+              ? "Connecting…"
+              : isConnected
+              ? short
+              : (
+                <>
+                  <span className="sm:hidden">Connect</span>
+                  <span className="hidden sm:inline">Connect Wallet</span>
+                </>
+              )}
+          </span>
         </span>
       </button>
 
