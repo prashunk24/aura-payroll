@@ -8,7 +8,7 @@ export const PageShell = ({ children }: { children: ReactNode }) => (
     <Navbar />
     <main className="container px-4 sm:px-6 py-6 sm:py-10">{children}</main>
     <footer className="container px-4 sm:px-6 py-8 sm:py-10 text-center text-xs text-muted-foreground">
-      © {new Date().getFullYear()} SolPay — Decentralized payroll on Solana.
+      © {new Date().getFullYear()} AuraPayroll — Modern payroll, automated tax, treasury yield.
     </footer>
   </div>
 );
