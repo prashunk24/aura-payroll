@@ -25,7 +25,7 @@ const queryClient = new QueryClient();
 const AnimatedRoutes = () => {
   const location = useLocation();
   return (
-    <AnimatePresence mode="sync" initial={false}>
+    <AnimatePresence mode="wait" initial={false}>
       <PageTransition key={location.pathname}>
         <Routes location={location}>
           <Route path="/" element={<Landing />} />
