@@ -1,7 +1,8 @@
 import { Link, NavLink, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Coins, Search, Moon } from "lucide-react";
+import { Search, Moon } from "lucide-react";
 import { WalletButton } from "./WalletButton";
+import logo from "@/assets/aura-logo.png";
 import { cn } from "@/lib/utils";
 
 const links = [
@@ -35,14 +36,24 @@ export const Navbar = () => {
         )}
       >
         {/* Brand */}
-        <Link to="/" className="flex items-center shrink-0">
+        <Link to="/" className="group flex items-center gap-1.5 shrink-0 pl-1 pr-2">
           <motion.span
-            whileHover={{ rotate: -8, scale: 1.05 }}
+            whileHover={{ rotate: -8, scale: 1.08 }}
             transition={{ type: "spring", stiffness: 300, damping: 18 }}
-            className="relative inline-flex items-center justify-center w-10 h-10 rounded-full bg-[hsl(0_0%_100%)] text-[hsl(0_0%_4%)]"
+            className="relative inline-flex items-center justify-center w-9 h-9 rounded-full bg-[hsl(0_0%_100%)] overflow-hidden"
           >
-            <Coins className="w-4 h-4" />
+            <span aria-hidden className="absolute inset-0 rounded-full bg-[hsl(0_0%_100%)] blur-md opacity-0 group-hover:opacity-60 transition-opacity duration-500" />
+            <img
+              src={logo}
+              alt="AuraPayroll"
+              draggable={false}
+              className="relative h-7 w-7 object-cover"
+              style={{ objectPosition: "8% center" }}
+            />
           </motion.span>
+          <span className="hidden sm:inline text-[15px] font-semibold tracking-tight text-[hsl(0_0%_98%)]">
+            Aura<span className="text-[hsl(0_0%_60%)] font-normal">Payroll</span>
+          </span>
         </Link>
 
         {/* Search */}
