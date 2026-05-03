@@ -36,19 +36,15 @@ export const Navbar = () => {
         )}
       >
         {/* Brand */}
-        <Link to="/" className="group flex items-center shrink-0">
-          <motion.span
+        <Link to="/" className="group flex items-center shrink-0 pl-2 pr-3">
+          <motion.img
+            src={logo}
+            alt="AuraPayroll"
+            draggable={false}
             whileHover={{ scale: 1.04 }}
             transition={{ type: "spring", stiffness: 300, damping: 18 }}
-            className="inline-flex items-center bg-white rounded-full pl-2.5 pr-3 py-1.5 ring-1 ring-[hsl(0_0%_100%/0.08)] shadow-sm"
-          >
-            <img
-              src={logo}
-              alt="AuraPayroll"
-              draggable={false}
-              className="h-5 sm:h-6 object-contain"
-            />
-          </motion.span>
+            className="h-6 sm:h-7 object-contain invert"
+          />
         </Link>
 
         {/* Search */}
