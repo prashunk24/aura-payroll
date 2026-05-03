@@ -9,29 +9,27 @@ export const AuraLogo = ({
   withWordmark?: boolean;
 }) => {
   return (
-    <div className={cn("inline-flex items-center gap-2 group", className)}>
-      <span className="relative inline-flex items-center justify-center h-9 w-9 shrink-0">
+    <div className={cn("inline-flex items-center group", className)}>
+      <span className="relative inline-flex items-center justify-center shrink-0">
         <span
           aria-hidden
-          className="absolute inset-0 rounded-2xl bg-foreground/10 blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+          className="absolute inset-0 rounded-2xl bg-foreground/10 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
         />
         <img
           src={logo}
           alt="AuraPayroll"
-          className="relative h-9 w-9 object-contain transition-transform duration-500 ease-out group-hover:rotate-[-6deg] group-hover:scale-105 dark:invert"
           draggable={false}
+          className={cn(
+            "relative object-contain object-left select-none transition-transform duration-500 ease-out group-hover:scale-[1.03] dark:invert",
+            withWordmark ? "h-8" : "h-9 w-9",
+          )}
+          style={
+            withWordmark
+              ? undefined
+              : { objectFit: "cover", objectPosition: "left center", aspectRatio: "1 / 1" }
+          }
         />
       </span>
-      {withWordmark && (
-        <img
-          src={logo}
-          alt=""
-          aria-hidden
-          className="h-7 object-contain object-left dark:invert"
-          style={{ clipPath: "inset(0 0 0 28%)", marginLeft: "-0.5rem" }}
-          draggable={false}
-        />
-      )}
     </div>
   );
 };
