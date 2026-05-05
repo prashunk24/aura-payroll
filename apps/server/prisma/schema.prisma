@@ -1,0 +1,73 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum PayrollState {
+  INITIATED
+  VALIDATED
+  PROCESSED
+  TAX_WITHHELD
+  YIELD_ACTIVE
+  WITHDRAWN
+  FAILED_VALIDATION
+  FAILED_EXECUTION
+}
+
+model Employee {
+  id            String          @id @default(uuid())
+  name          String
+  email         String          @unique
+  walletAddress String          @unique
+  payrollRecords PayrollRecord[]
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+}
+
+model PayrollRecord {
+  id              String         @id @default(uuid())
+  employeeId      String
+  employee        Employee       @relation(fields: [employeeId], references: [id])
+  amount          Float
+  currency        String         @default("USDC")
+  status          PayrollState   @default(INITIATED)
+  transactionHash String?
+  taxDeductions   TaxDeduction[]
+  yieldPositions  YieldPosition[]
+  paidAt          DateTime?
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+}
+
+model TaxDeduction {
+  id              String        @id @default(uuid())
+  payrollRecordId String
+  payrollRecord   PayrollRecord @relation(fields: [payrollRecordId], references: [id])
+  type            String        // e.g., Income Tax, Social Security
+  amount          Float
+  createdAt       DateTime      @default(now())
+}
+
+model YieldPosition {
+  id              String        @id @default(uuid())
+  payrollRecordId String
+  payrollRecord   PayrollRecord @relation(fields: [payrollRecordId], references: [id])
+  protocol        String        // e.g., Kamino, Marginfi
+  allocatedAmount Float
+  currentYield    Float         @default(0)
+  status          String        @default("ACTIVE") // ACTIVE, WITHDRAWN
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+}
+
+model TransactionLog {
+  id              String   @id @default(uuid())
+  action          String   // e.g., PAYROLL_INITIATED, TAX_WITHHELD
+  details         Json?
+  state           String?  // The state of the record at the time of log
+  timestamp       DateTime @default(now())
+}
