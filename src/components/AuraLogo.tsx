@@ -16,7 +16,7 @@ export const AuraLogo = ({
         draggable={false}
         className={cn(
           "object-contain object-left select-none transition-transform duration-500 ease-out group-hover:scale-[1.04]",
-          withWordmark ? "h-12" : "h-10 w-10",
+          withWordmark ? "h-16" : "h-12 w-12",
         )}
       />
     </div>
