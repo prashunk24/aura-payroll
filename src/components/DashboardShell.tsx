@@ -85,7 +85,7 @@ const SidebarLink = ({
 const SidebarContent = ({ onNavigate }: { onNavigate?: () => void }) => (
   <div className="flex flex-col h-full">
     <div className="px-5 pt-6 pb-5">
-      <Link to="/app" onClick={onNavigate}>
+      <Link to="/" onClick={onNavigate}>
         <AuraLogo />
       </Link>
     </div>
@@ -194,9 +194,9 @@ export const DashboardShell = ({ children, title, subtitle, actions }: Dashboard
             <Menu className="w-5 h-5" />
           </button>
 
-          <div className="lg:hidden">
+          <Link to="/" className="lg:hidden">
             <AuraLogo withWordmark={false} />
-          </div>
+          </Link>
 
           <div className="flex-1" />
 
