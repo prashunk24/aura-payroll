@@ -1,6 +1,6 @@
 import { Link, NavLink, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Search, Moon } from "lucide-react";
+import { Moon } from "lucide-react";
 import { WalletButton } from "./WalletButton";
 import logo from "@/assets/aura-logo.png";
 import { cn } from "@/lib/utils";
