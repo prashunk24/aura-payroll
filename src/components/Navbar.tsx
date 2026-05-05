@@ -47,25 +47,7 @@ export const Navbar = () => {
           />
         </Link>
 
-        {/* Search */}
-        <div
-          className={cn(
-            "hidden md:flex items-center gap-2 w-[220px] xl:w-[240px] shrink-0",
-            "h-10 px-3 rounded-full",
-            "bg-[hsl(0_0%_100%/0.04)] border border-[hsl(0_0%_100%/0.06)]",
-            "text-[hsl(0_0%_60%)]"
-          )}
-        >
-          <Search className="w-4 h-4 shrink-0" />
-          <input
-            placeholder="Search..."
-            className="bg-transparent outline-none text-sm flex-1 min-w-0 placeholder:text-[hsl(0_0%_45%)] text-[hsl(0_0%_90%)]"
-          />
-          <div className="hidden xl:flex items-center gap-1 text-[10px] shrink-0">
-            <kbd className="px-1.5 py-0.5 rounded-md bg-[hsl(0_0%_100%/0.06)] border border-[hsl(0_0%_100%/0.08)] font-mono">⌘</kbd>
-            <kbd className="px-1.5 py-0.5 rounded-md bg-[hsl(0_0%_100%/0.06)] border border-[hsl(0_0%_100%/0.08)] font-mono">K</kbd>
-          </div>
-        </div>
+        {/* Search removed */}
 
         {/* Links with animated indicator */}
         <ul className="hidden lg:flex items-center gap-0.5 flex-1 justify-center min-w-0">
