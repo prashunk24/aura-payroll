@@ -15,8 +15,8 @@ export const AuraLogo = ({
         alt="AuraPayroll"
         draggable={false}
         className={cn(
-          "object-contain object-left select-none transition-transform duration-500 ease-out group-hover:scale-[1.04]",
-          withWordmark ? "h-7" : "h-8 w-8",
+          "object-left select-none transition-transform duration-500 ease-out group-hover:scale-[1.04] h-7 object-fill bg-primary-foreground text-primary",
+          !withWordmark && "h-8 w-8",
         )}
         style={
           withWordmark
