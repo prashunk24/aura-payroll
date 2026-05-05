@@ -15,14 +15,9 @@ export const AuraLogo = ({
         alt="AuraPayroll"
         draggable={false}
         className={cn(
-          "object-left select-none transition-transform duration-500 ease-out group-hover:scale-[1.04] h-7 object-fill bg-primary-foreground text-primary",
-          !withWordmark && "h-8 w-8",
+          "object-contain object-left select-none transition-transform duration-500 ease-out group-hover:scale-[1.04]",
+          withWordmark ? "h-8" : "h-8 w-8",
         )}
-        style={
-          withWordmark
-            ? undefined
-            : { objectFit: "cover", objectPosition: "left center", aspectRatio: "1 / 1" }
-        }
       />
     </div>
   );
