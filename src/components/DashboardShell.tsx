@@ -85,7 +85,7 @@ const SidebarLink = ({
 const SidebarContent = ({ onNavigate }: { onNavigate?: () => void }) => (
   <div className="flex flex-col h-full">
     <div className="px-5 pt-6 pb-5">
-      <Link to="/app" onClick={onNavigate}>
+      <Link to="/" onClick={onNavigate}>
         <AuraLogo />
       </Link>
     </div>
