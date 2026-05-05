@@ -194,9 +194,9 @@ export const DashboardShell = ({ children, title, subtitle, actions }: Dashboard
             <Menu className="w-5 h-5" />
           </button>
 
-          <div className="lg:hidden">
+          <Link to="/" className="lg:hidden">
             <AuraLogo withWordmark={false} />
-          </div>
+          </Link>
 
           <div className="flex-1" />
 
