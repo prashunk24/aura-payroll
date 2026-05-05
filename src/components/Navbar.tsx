@@ -43,7 +43,7 @@ export const Navbar = () => {
             draggable={false}
             whileHover={{ scale: 1.04 }}
             transition={{ type: "spring", stiffness: 300, damping: 18 }}
-            className="h-6 sm:h-7 object-contain invert"
+            className="h-6 sm:h-7 object-contain invert text-destructive-foreground text-lg font-medium"
           />
         </Link>
 
