@@ -1,5 +1,6 @@
-import { useWallet } from "@solana/wallet-adapter-react";
-import { Wallet as WalletIcon, X, Loader2, Download } from "lucide-react";
+import { useWallet as useSolanaAdapter } from "@solana/wallet-adapter-react";
+import { useWallet } from "@/hooks/useWallet";
+import { Wallet as WalletIcon, X, Loader2, Download, Terminal } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 import { useMemo, useState } from "react";
@@ -12,7 +13,8 @@ interface WalletModalProps {
 }
 
 export const WalletModal = ({ open, onOpenChange }: WalletModalProps) => {
-  const { wallets, select, connect } = useWallet();
+  const { wallets, select, connect } = useSolanaAdapter();
+  const { connectMock } = useWallet();
   const [pending, setPending] = useState<string | null>(null);
 
   const { detected, more } = useMemo(() => {
@@ -46,6 +48,12 @@ export const WalletModal = ({ open, onOpenChange }: WalletModalProps) => {
     }
   };
 
+  const handleMockConnect = () => {
+    connectMock();
+    toast.success("Connected with Dev Wallet (Mock Mode)");
+    onOpenChange(false);
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
@@ -71,6 +79,18 @@ export const WalletModal = ({ open, onOpenChange }: WalletModalProps) => {
         </DialogHeader>
 
         <div className="px-6 pb-6 pt-4 space-y-4 relative">
+          <div className="space-y-2">
+            <p className="text-[11px] uppercase tracking-wider text-muted-foreground/80">
+              Sandbox
+            </p>
+            <WalletRow
+              name="Dev Wallet (Mock Mode)"
+              badge="Enabled"
+              icon=""
+              onClick={handleMockConnect}
+            />
+          </div>
+
           {detected.length > 0 && (
             <div className="space-y-2">
               <p className="text-[11px] uppercase tracking-wider text-muted-foreground/80">

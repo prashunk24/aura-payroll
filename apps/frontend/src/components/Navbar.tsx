@@ -84,15 +84,6 @@ export const Navbar = () => {
 
         {/* Right cluster */}
         <div className="flex items-center gap-1 sm:gap-2 shrink-0">
-          <motion.button
-            whileHover={{ rotate: -15 }}
-            whileTap={{ scale: 0.92 }}
-            className="hidden md:inline-flex items-center justify-center w-10 h-10 rounded-full text-[hsl(0_0%_70%)] hover:text-[hsl(0_0%_100%)] hover:bg-[hsl(0_0%_100%/0.06)] transition-colors shrink-0"
-            aria-label="Toggle theme"
-          >
-            <Moon className="w-4 h-4" />
-          </motion.button>
-          <div className="hidden md:block w-px h-6 bg-[hsl(0_0%_100%/0.08)]" />
           <WalletButton size="sm" />
         </div>
       </nav>

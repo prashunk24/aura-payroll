@@ -4,7 +4,7 @@ import { StatCard } from "@/components/StatCard";
 import { GlowButton } from "@/components/GlowButton";
 import { SalarySplitFlow } from "@/components/SalarySplitFlow";
 import { RunPayrollModal } from "@/components/RunPayrollModal";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Wallet,
   Users,
@@ -19,21 +19,40 @@ import {
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-
-const recentTx = [
-  { id: 1, name: "April salary batch", amount: 184200, type: "out", date: "Apr 1", status: "Completed" },
-  { id: 2, name: "Tax vault yield", amount: 412, type: "in", date: "Mar 31", status: "Completed" },
-  { id: 3, name: "Funds added", amount: 50000, type: "in", date: "Mar 28", status: "Completed" },
-  { id: 4, name: "Bonus · Q1 perf.", amount: 12400, type: "out", date: "Mar 25", status: "Completed" },
-];
+import { api } from "@/services/apiClient";
+import { API_ENDPOINTS } from "@/config/api";
+import { useWallet } from "@/hooks/useWallet";
 
 const Dashboard = () => {
+  const { isConnected } = useWallet();
   const [runOpen, setRunOpen] = useState(false);
+  const [stats, setStats] = useState<any>({
+    totalPayroll: 0,
+    totalEmployees: 0,
+    totalTaxWithheld: 0,
+    activeYield: 0
+  });
+
+  const fetchStats = async () => {
+    if (!isConnected) return;
+    try {
+      const data = await api.get<any>(API_ENDPOINTS.stats.overview);
+      setStats(data);
+    } catch (error) {
+      console.error("Failed to fetch stats", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchStats();
+    const interval = setInterval(fetchStats, 10000);
+    return () => clearInterval(interval);
+  }, [isConnected]);
 
   return (
     <DashboardShell
       title="Welcome back, Acme"
-      subtitle="Your team is on track. Next payroll runs in 2 days, 14 hours."
+      subtitle="Your team is on track. Intelligent flows are active."
       actions={
         <GlowButton onClick={() => setRunOpen(true)}>
           <PlayCircle className="w-4 h-4" /> Run payroll
@@ -60,10 +79,10 @@ const Dashboard = () => {
 
       {/* Top metrics */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6">
-        <StatCard label="Total payroll" value="$184,200" delta={4.2} icon={Wallet} />
-        <StatCard label="Employees paid" value="44" delta={2.3} icon={Users} />
-        <StatCard label="Tax withheld" value="$33,156" delta={4.2} icon={Receipt} />
-        <StatCard label="Yield earned" value="$8,412" delta={12.8} icon={TrendingUp} />
+        <StatCard label="Total payroll" value={`$${stats.totalPayroll.toLocaleString()}`} icon={Wallet} />
+        <StatCard label="Employees paid" value={stats.totalEmployees.toString()} icon={Users} />
+        <StatCard label="Tax withheld" value={`$${stats.totalTaxWithheld.toLocaleString()}`} icon={Receipt} />
+        <StatCard label="Yield earned" value={`$${stats.activeYield.toLocaleString()}`} icon={TrendingUp} />
       </div>
 
       {/* Salary split + Upcoming */}
@@ -117,33 +136,6 @@ const Dashboard = () => {
           </Link>
         </GlassCard>
       </div>
-
-      {/* Recent activity */}
-      <GlassCard>
-        <div className="flex items-center justify-between mb-4">
-          <div>
-            <h2 className="text-base font-semibold">Recent activity</h2>
-            <p className="text-xs text-muted-foreground mt-0.5">Latest transactions across your account.</p>
-          </div>
-          <Link to="/app/transactions" className="text-xs font-semibold hover:underline underline-offset-4">View all →</Link>
-        </div>
-        <div className="divide-y divide-foreground/5">
-          {recentTx.map((t) => (
-            <div key={t.id} className="flex items-center gap-3 py-3.5">
-              <div className={`w-9 h-9 rounded-xl border flex items-center justify-center ${t.type === "in" ? "bg-foreground/[0.04] border-foreground/10" : "bg-foreground text-background border-foreground"}`}>
-                {t.type === "in" ? <ArrowDownLeft className="w-4 h-4" /> : <ArrowUpRight className="w-4 h-4" />}
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium truncate">{t.name}</p>
-                <p className="text-[11px] text-muted-foreground">{t.date} · {t.status}</p>
-              </div>
-              <p className={`text-sm font-semibold ${t.type === "in" ? "text-foreground" : "text-muted-foreground"}`}>
-                {t.type === "in" ? "+" : "−"}${t.amount.toLocaleString()}
-              </p>
-            </div>
-          ))}
-        </div>
-      </GlassCard>
 
       <RunPayrollModal open={runOpen} onOpenChange={setRunOpen} total={184200} employees={44} taxRate={18} />
     </DashboardShell>

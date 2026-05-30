@@ -5,6 +5,8 @@ import dotenv from 'dotenv';
 import { PrismaClient } from '@prisma/client';
 import authRouter from './modules/auth/auth.controller';
 import payrollRouter from './modules/payroll/payroll.controller';
+import employeeRouter from './modules/employee/employee.controller';
+import statsRouter from './modules/stats/stats.controller';
 import { logger } from './lib/logger';
 
 // Import workers to initialize them
@@ -29,6 +31,8 @@ app.use((req, res, next) => {
 // Routes
 app.use('/api/auth', authRouter);
 app.use('/api/payroll', payrollRouter);
+app.use('/api/employee', employeeRouter);
+app.use('/api/stats', statsRouter);
 
 // Health check
 app.get('/health', (req, res) => {

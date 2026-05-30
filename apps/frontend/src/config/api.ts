@@ -15,44 +15,25 @@ export const SOLANA_RPC =
 
 export const API_ENDPOINTS = {
   // Auth / user
-  user: {
-    me: "/api/user/me",
-    data: "/api/user/data",
-    update: "/api/user/update",
+  auth: {
+    login: "/api/auth/login",
+    register: "/api/auth/register",
   },
   // Payroll
   payroll: {
-    send: "/api/payroll/send",
+    prepareBatch: "/api/payroll/prepare-batch",
+    run: "/api/payroll/run",
     list: "/api/payroll/list",
-    schedule: "/api/payroll/schedule",
-    cancel: "/api/payroll/cancel/:id",
   },
   // Employees
   employees: {
-    list: "/api/employees",
-    create: "/api/employees",
-    update: "/api/employees/:id",
-    remove: "/api/employees/:id",
+    list: "/api/employee/list",
+    add: "/api/employee/add",
   },
-  // Tax
-  tax: {
-    settings: "/api/tax/settings",
-    deduct: "/api/tax/deduct",
-    vault: "/api/tax/vault",
-    deposit: "/api/tax/vault/deposit",
-    withdraw: "/api/tax/vault/withdraw",
-    yield: "/api/tax/vault/yield",
-  },
-  // Transactions
-  transactions: {
-    list: "/api/transactions",
-    detail: "/api/transactions/:id",
-  },
-  // Web3 / Solana
-  web3: {
-    walletStatus: "/api/web3/wallet/status",
-    sign: "/api/web3/sign",
-    broadcast: "/api/web3/broadcast",
+  // Stats
+  stats: {
+    overview: "/api/stats/overview",
+    charts: "/api/stats/charts",
   },
 } as const;
 
@@ -70,54 +51,21 @@ export interface ApiEndpointMeta {
 export const API_DOCS: ApiEndpointMeta[] = [
   {
     method: "POST",
-    path: API_ENDPOINTS.payroll.send,
+    path: API_ENDPOINTS.payroll.run,
     description: "Send a payroll batch to one or more employee wallets.",
-    request: { employees: [{ wallet: "8xK...3aP", amountUsdc: 2500 }], memo: "April salary" },
-    response: { txId: "5sZ...9Qa", status: "submitted" },
+    request: { employeeId: "emp_01", amount: 2500, signature: "5sZ...9Qa" },
+    response: { id: "rec_123", status: "INITIATED" },
   },
   {
     method: "GET",
-    path: API_ENDPOINTS.user.data,
-    description: "Get current user profile + on-chain balances.",
-    response: { wallet: "8xK...3aP", role: "employer", balanceUsdc: 124500 },
+    path: API_ENDPOINTS.stats.overview,
+    description: "Get organization payroll and yield stats.",
+    response: { totalPayroll: 124500, totalEmployees: 44, totalTaxWithheld: 18000, activeYield: 900 },
   },
   {
     method: "GET",
     path: API_ENDPOINTS.employees.list,
     description: "List employees registered for the current organization.",
     response: { employees: [{ id: "emp_01", name: "Ada Lovelace", wallet: "9zP...7bQ", salary: 4200 }] },
-  },
-  {
-    method: "POST",
-    path: API_ENDPOINTS.tax.deposit,
-    description: "Deposit funds into the yield-earning tax vault.",
-    request: { amountUsdc: 10000 },
-    response: { vaultBalance: 134500, apy: 5.4 },
-  },
-  {
-    method: "POST",
-    path: API_ENDPOINTS.tax.withdraw,
-    description: "Withdraw from the tax vault to operating wallet.",
-    request: { amountUsdc: 5000 },
-    response: { vaultBalance: 129500, txId: "3hY...2cR" },
-  },
-  {
-    method: "GET",
-    path: API_ENDPOINTS.tax.yield,
-    description: "Time-series yield analytics for the tax vault.",
-    response: { points: [{ t: "2025-01", apy: 5.1, earned: 412 }] },
-  },
-  {
-    method: "GET",
-    path: API_ENDPOINTS.transactions.list,
-    description: "Paginated transaction history (payroll + vault).",
-    response: { items: [{ id: "tx_001", type: "payroll", amountUsdc: 2500, ts: 1714000000 }] },
-  },
-  {
-    method: "POST",
-    path: API_ENDPOINTS.web3.sign,
-    description: "Request a Solana transaction signature from the connected wallet.",
-    request: { tx: "base64..." },
-    response: { signature: "5sZ...9Qa" },
   },
 ];

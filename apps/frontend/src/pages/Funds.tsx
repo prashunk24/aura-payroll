@@ -1,14 +1,51 @@
 import { DashboardShell } from "@/components/DashboardShell";
 import { GlassCard } from "@/components/GlassCard";
 import { GlowButton } from "@/components/GlowButton";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "sonner";
-import { ArrowDownToLine, ArrowUpFromLine, Building2, CreditCard, Plus } from "lucide-react";
+import { ArrowDownToLine, ArrowUpFromLine, Building2, CreditCard, Plus, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useWallet } from "@/hooks/useWallet";
+import { Connection, LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
+import { SOLANA_RPC } from "@/config/api";
 
 const Funds = () => {
+  const { isConnected, address, isMock } = useWallet();
   const [mode, setMode] = useState<"add" | "withdraw">("add");
   const [amount, setAmount] = useState("");
+  const [balance, setBalance] = useState<number | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    if (!isConnected || !address) {
+      setBalance(null);
+      return;
+    }
+
+    if (isMock) {
+      // Fake a nice large balance for the dev wallet
+      setBalance(145000);
+      return;
+    }
+
+    const fetchBalance = async () => {
+      setIsLoading(true);
+      try {
+        const connection = new Connection(SOLANA_RPC, 'confirmed');
+        const pubkey = new PublicKey(address);
+        const lamports = await connection.getBalance(pubkey);
+        // For preview, we treat 1 SOL = 150 USDC just to show a meaningful dollar amount
+        // In a real app we'd fetch actual SPL token balances
+        setBalance((lamports / LAMPORTS_PER_SOL) * 150);
+      } catch (err) {
+        console.error("Failed to fetch balance", err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchBalance();
+  }, [isConnected, address, isMock]);
 
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -70,7 +107,7 @@ const Funds = () => {
                   <input type="radio" name="src" defaultChecked className="accent-foreground" />
                   <Building2 className="w-4 h-4" />
                   <div className="flex-1">
-                    <p className="text-sm font-medium">Bank transfer · Acme Operating</p>
+                    <p className="text-sm font-medium">Bank transfer · Aura Operating</p>
                     <p className="text-xs text-muted-foreground">****4129 · arrives in seconds</p>
                   </div>
                 </label>
@@ -94,8 +131,16 @@ const Funds = () => {
         <div className="space-y-4">
           <GlassCard>
             <p className="text-xs text-muted-foreground">Treasury balance</p>
-            <p className="text-3xl font-semibold tracking-tight mt-1">$1,284,920</p>
-            <p className="text-xs text-muted-foreground mt-1.5">Available · ready to spend</p>
+            {isLoading ? (
+               <Loader2 className="w-6 h-6 animate-spin mt-2 opacity-50" />
+            ) : (
+               <p className="text-3xl font-semibold tracking-tight mt-1">
+                 {balance !== null ? `$${balance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : "$0.00"}
+               </p>
+            )}
+            <p className="text-xs text-muted-foreground mt-1.5">
+              {isConnected ? "Available · ready to spend" : "Connect wallet to view"}
+            </p>
           </GlassCard>
 
           <GlassCard>
@@ -107,7 +152,7 @@ const Funds = () => {
             </div>
             <div className="space-y-2.5">
               {[
-                { label: "Acme Operating", sub: "****4129", icon: Building2 },
+                { label: "Aura Operating", sub: "****4129", icon: Building2 },
                 { label: "Visa · Personal", sub: "****8821", icon: CreditCard },
               ].map((a) => (
                 <div key={a.sub} className="flex items-center gap-3 py-2">

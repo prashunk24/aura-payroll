@@ -1,6 +1,7 @@
 {
   "name": "aura-payroll",
   "private": true,
+  "packageManager": "npm@11.12.1",
   "scripts": {
     "build": "turbo build",
     "dev": "turbo dev",
@@ -14,6 +15,7 @@
     "programs/*"
   ],
   "devDependencies": {
+    "playwright": "^1.60.0",
     "turbo": "latest"
   }
 }

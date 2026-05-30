@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   db:
     image: postgres:15-alpine
@@ -17,6 +15,43 @@ services:
     image: redis:7-alpine
     ports:
       - '6379:6379'
+
+  solana:
+    image: solanalabs/solana:v1.18.17
+    platform: linux/amd64
+    ports:
+      - "8899:8899"
+      - "8900:8900"
+    command: solana-test-validator --reset --quiet --rpc-bind-address 0.0.0.0
+
+  app:
+    image: node:22-alpine
+    working_dir: /app
+    volumes:
+      - .:/app
+    ports:
+      - "8080:8080"
+      - "8081:8081"
+      - "3001:3001"
+      - "5173:5173"
+    environment:
+      - DATABASE_URL=postgresql://postgres:password@db:5432/aura_payroll?schema=public
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - SOLANA_RPC_URL=http://solana:8899
+      - VITE_SOLANA_RPC=http://localhost:8899
+      - VITE_API_BASE_URL=http://localhost:3001
+      - CHOKIDAR_USEPOLLING=true # Helps with file watching inside Docker
+    depends_on:
+      - db
+      - redis
+      - solana
+    command: >
+      sh -c "npm install && 
+             npm run prisma:push --workspace=@aura/server &&
+             npm run prisma:generate --workspace=@aura/server && 
+             npm run prisma:seed --workspace=@aura/server || true &&
+             npm run dev"
 
 volumes:
   postgres_data:

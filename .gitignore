@@ -22,3 +22,15 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Build and Cache
+.npm_cache
+.turbo
+target/
+dist/
+
+# Sensitive files
+*-keypair.json
+.env
+.env.*
+!.env.example

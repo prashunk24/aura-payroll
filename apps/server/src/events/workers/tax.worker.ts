@@ -13,17 +13,19 @@ const connection = {
 export const taxWorker = new Worker(
   'tax',
   async (job: Job) => {
-    const { payrollRecordId, region } = job.data;
-    logger.info({ payrollRecordId, region }, 'Processing tax calculation job');
+    const { payrollRecordId } = job.data;
+    logger.info({ payrollRecordId }, 'Processing tax calculation job');
 
     try {
       const record = await prisma.payrollRecord.findUnique({
         where: { id: payrollRecordId },
+        include: { employee: true },
       });
 
       if (!record) throw new Error('Record not found');
 
-      // 1. Calculate Tax
+      // 1. Calculate Tax using employee region
+      const region = record.employee.region || 'IN';
       const taxResult = await calculateTaxForRegion(record.amount, region);
 
       // 2. Save Tax Deductions

@@ -5,6 +5,10 @@ import { SalarySplitFlow } from "./SalarySplitFlow";
 import { motion, AnimatePresence } from "framer-motion";
 import { Check, Loader2, ArrowRight } from "lucide-react";
 import { toast } from "sonner";
+import { api } from "@/services/apiClient";
+import { API_ENDPOINTS } from "@/config/api";
+import { useWallet } from "@/hooks/useWallet";
+import { Transaction } from "@solana/web3.js";
 
 interface RunPayrollModalProps {
   open: boolean;
@@ -17,6 +21,7 @@ interface RunPayrollModalProps {
 type Step = "preview" | "running" | "success";
 
 export const RunPayrollModal = ({ open, onOpenChange, total, employees, taxRate }: RunPayrollModalProps) => {
+  const { isConnected, isMock, signTransaction, sendTransaction } = useWallet();
   const [step, setStep] = useState<Step>("preview");
 
   const reset = (val: boolean) => {
@@ -24,12 +29,69 @@ export const RunPayrollModal = ({ open, onOpenChange, total, employees, taxRate 
     if (!val) setTimeout(() => setStep("preview"), 250);
   };
 
-  const run = () => {
+  const run = async () => {
+    if (!isConnected || !signTransaction || !sendTransaction) {
+      toast.error("Please connect your wallet first");
+      return;
+    }
+
     setStep("running");
-    setTimeout(() => {
+    
+    try {
+      const employeesToPay = await api.get<any[]>(API_ENDPOINTS.employees.list);
+
+      if (employeesToPay.length === 0) {
+        throw new Error("No employees found to pay");
+      }
+
+      const employeeIds = employeesToPay.map(e => e.id).join(',');
+
+      const batch = await api.get<any[]>(
+        `${API_ENDPOINTS.payroll.prepareBatch}?employeeIds=${employeeIds}`
+      );
+
+      let lastSignature = "";
+
+      for (const item of batch) {
+        const tx = Transaction.from(Buffer.from(item.transaction, 'base64'));
+        const signedTx = await signTransaction(tx);
+        
+        const connection = (window as any).solana?.connection || {}; 
+        const signature = await sendTransaction(signedTx, connection);
+        lastSignature = signature;
+
+        await api.post<any>(API_ENDPOINTS.payroll.run, {
+          employeeId: item.employeeId,
+          amount: item.amount,
+          signature,
+        });
+      }
+
       setStep("success");
-      toast.success("Payroll executed successfully");
-    }, 1800);
+      toast.success("Payroll batch completed", {
+        description: (
+          <div className="flex flex-col gap-1 mt-1">
+            <span>{batch.length} employees paid successfully.</span>
+            {lastSignature && (
+              <a 
+                href={`https://explorer.solana.com/tx/${lastSignature}?cluster=devnet`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[11px] font-mono text-primary underline underline-offset-2 hover:opacity-80 break-all"
+              >
+                {lastSignature}
+              </a>
+            )}
+          </div>
+        ) as any
+      });
+    } catch (error: any) {
+      console.error(error);
+      setStep("preview");
+      toast.error("Execution failed", {
+        description: error.message || "Wallet signature denied or backend offline."
+      });
+    }
   };
 
   return (

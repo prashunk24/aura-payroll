@@ -212,11 +212,11 @@ export const DashboardShell = ({ children, title, subtitle, actions }: Dashboard
 
           <div className="flex items-center gap-2.5 pl-1 pr-3 h-9 rounded-full hover:bg-foreground/5 cursor-pointer transition-colors">
             <span className="w-7 h-7 rounded-full bg-gradient-to-br from-foreground to-foreground/70 text-background flex items-center justify-center text-[11px] font-semibold">
-              AC
+              HR
             </span>
             <div className="hidden sm:block leading-tight">
-              <p className="text-xs font-semibold">Acme, Inc.</p>
-              <p className="text-[10px] text-muted-foreground">Admin · Pro</p>
+              <p className="text-xs font-semibold">HR Department</p>
+              <p className="text-[10px] text-muted-foreground">Admin</p>
             </div>
           </div>
         </header>

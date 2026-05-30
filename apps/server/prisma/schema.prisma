@@ -19,14 +19,17 @@ enum PayrollState {
 }
 
 model Employee {
-  id            String          @id @default(uuid())
-  name          String
-  email         String          @unique
-  walletAddress String          @unique
+  id             String          @id @default(uuid())
+  name           String
+  email          String          @unique
+  walletAddress  String          @unique
+  region         String          @default("IN")
+  salary         Float           @default(0)
   payrollRecords PayrollRecord[]
-  createdAt     DateTime        @default(now())
-  updatedAt     DateTime        @updatedAt
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
 }
+
 
 model PayrollRecord {
   id              String         @id @default(uuid())

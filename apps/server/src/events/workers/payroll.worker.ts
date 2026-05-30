@@ -3,6 +3,7 @@ import { logger } from '../../lib/logger';
 import { taxQueue, publishEvent } from '../queue';
 import { PrismaClient } from '@prisma/client';
 import { validatePayrollRecord } from '../../modules/compliance/compliance.service';
+import { confirmTransaction } from '../../solana/payrollProgram';
 
 const prisma = new PrismaClient();
 const connection = {
@@ -13,72 +14,62 @@ const connection = {
 export const payrollWorker = new Worker(
   'payroll',
   async (job: Job) => {
-    const { payrollRecordId, employerId } = job.data;
-    logger.info({ payrollRecordId, employerId }, 'Processing payroll job');
+    const { payrollRecordId, employerId, transactionSignature } = job.data;
+    
+    // Idempotency: Check if already processed
+    const existingRecord = await prisma.payrollRecord.findUnique({
+      where: { id: payrollRecordId },
+    });
+
+    if (existingRecord?.status === 'PROCESSED' || existingRecord?.status === 'TAX_WITHHELD') {
+      logger.info({ payrollRecordId }, 'Payroll already processed, skipping');
+      return;
+    }
+
+    logger.info({ payrollRecordId, employerId, transactionSignature }, 'Processing payroll execution');
 
     try {
-      const record = await prisma.payrollRecord.findUnique({
-        where: { id: payrollRecordId },
-        include: { employee: true },
-      });
+      // 1. Validation (Database record check)
+      if (!existingRecord) throw new Error(`Record ${payrollRecordId} not found`);
 
-      if (!record) {
-        throw new Error(`Payroll record ${payrollRecordId} not found`);
-      }
+      // 2. On-Chain Confirmation
+      if (transactionSignature) {
+        logger.info({ transactionSignature }, 'Confirming on-chain transaction');
+        const isConfirmed = await confirmTransaction(transactionSignature);
+        
+        if (!isConfirmed) {
+          throw new Error(`Transaction ${transactionSignature} failed to confirm`);
+        }
 
-      // 1. Validation Phase
-      const isValid = await validatePayrollRecord(record);
-      if (!isValid) {
         await prisma.payrollRecord.update({
           where: { id: payrollRecordId },
-          data: { status: 'FAILED_VALIDATION' },
+          data: { 
+            status: 'PROCESSED',
+            transactionHash: transactionSignature,
+            paidAt: new Date(),
+          },
         });
-        return;
       }
 
-      await prisma.payrollRecord.update({
-        where: { id: payrollRecordId },
-        data: { status: 'VALIDATED' },
-      });
-
-      // 2. Execution Phase (Simulating Solana distribution)
-      logger.info({ payrollRecordId }, 'Distributing net salary on-chain');
-      const txHash = 'SIMULATED_TX_' + Math.random().toString(36).substring(7);
-
-      await prisma.payrollRecord.update({
-        where: { id: payrollRecordId },
-        data: { 
-          status: 'PROCESSED',
-          transactionHash: txHash,
-          paidAt: new Date(),
-        },
-      });
-
-      // 3. Emit next event for tax withholding
+      // 3. Emit next event for tax withholding & yield
       await publishEvent(taxQueue, 'calculate.tax', { 
         payrollRecordId, 
         employerId,
-        region: 'IN' // Placeholder
       });
 
-      logger.info({ payrollRecordId }, 'Payroll distribution completed and tax event emitted');
+      logger.info({ payrollRecordId }, 'Payroll cycle: PROCESSED -> TAX_WITHHELD event emitted');
 
     } catch (error: any) {
-      logger.error({ error: error.message, payrollRecordId }, 'Payroll worker failed');
+      logger.error({ error: error.message, payrollRecordId }, 'Payroll worker execution failed');
+      
+      // Update state to allow for manual retry or compensation
       await prisma.payrollRecord.update({
         where: { id: payrollRecordId },
         data: { status: 'FAILED_EXECUTION' },
       });
+      
       throw error;
     }
   },
   { connection }
 );
-
-payrollWorker.on('completed', (job) => {
-  logger.info({ jobId: job.id }, 'Payroll job completed successfully');
-});
-
-payrollWorker.on('failed', (job, err) => {
-  logger.error({ jobId: job?.id, error: err.message }, 'Payroll job failed');
-});

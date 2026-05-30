@@ -1,20 +1,32 @@
 use anchor_lang::prelude::*;
 
-declare_id!("TaxVault11111111111111111111111111111111111");
+declare_id!("CwUy1nfdAQAHTXM1ehmRhdjeHdECBUSRJadHACeKXJo5");
 
 #[program]
 pub mod tax_vault_program {
     use super::*;
 
     pub fn deposit_tax(ctx: Context<DepositTax>, amount: u64) -> Result<()> {
-        // Funds held in PDA until yield allocation or withdrawal
+        let vault = &mut ctx.accounts.vault;
+        vault.total_tax_withheld = vault.total_tax_withheld.checked_add(amount).unwrap();
+        
         Ok(())
     }
 
     pub fn allocate_to_yield(ctx: Context<AllocateYield>, amount: u64) -> Result<()> {
-        // CPI to Yield Vault Program
+        let vault = &mut ctx.accounts.vault;
+        require!(vault.total_tax_withheld >= amount, ErrorCode::InsufficientFunds);
+        
+        vault.total_tax_withheld = vault.total_tax_withheld.checked_sub(amount).unwrap();
+        
         Ok(())
     }
+}
+
+#[error_code]
+pub enum ErrorCode {
+    #[msg("Insufficient funds in vault")]
+    InsufficientFunds,
 }
 
 #[derive(Accounts)]

@@ -1,37 +1,54 @@
 import { DashboardShell } from "@/components/DashboardShell";
 import { GlassCard } from "@/components/GlassCard";
 import { GlowButton } from "@/components/GlowButton";
-import { Search, ArrowUpRight, ArrowDownLeft, Filter, Download } from "lucide-react";
-import { useState } from "react";
+import { Search, ArrowUpRight, ArrowDownLeft, Filter, Download, Loader2 } from "lucide-react";
+import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
-
-const all = [
-  { id: "TX-2841", name: "April salary batch", employee: "44 employees", amount: -184200, date: "Apr 1, 2025", status: "success" },
-  { id: "TX-2840", name: "Tax vault routing", employee: "System", amount: -33156, date: "Apr 1, 2025", status: "success" },
-  { id: "TX-2839", name: "Vault yield distribution", employee: "System", amount: 412, date: "Mar 31, 2025", status: "success" },
-  { id: "TX-2838", name: "Funds added", employee: "Bank transfer", amount: 50000, date: "Mar 28, 2025", status: "success" },
-  { id: "TX-2837", name: "Bonus · Q1 perf.", employee: "12 employees", amount: -12400, date: "Mar 25, 2025", status: "success" },
-  { id: "TX-2836", name: "Salary · A. Lovelace", employee: "Ada Lovelace", amount: -6800, date: "Mar 22, 2025", status: "pending" },
-  { id: "TX-2835", name: "Salary · L. Torvalds", employee: "Linus Torvalds", amount: -6200, date: "Mar 22, 2025", status: "failed" },
-];
+import { api } from "@/services/apiClient";
+import { API_ENDPOINTS } from "@/config/api";
+import { useWallet } from "@/hooks/useWallet";
 
 const statusStyles: Record<string, string> = {
-  success: "bg-foreground/[0.04] text-foreground border-foreground/10",
-  pending: "bg-foreground/[0.04] text-muted-foreground border-foreground/10",
-  failed: "bg-destructive/10 text-destructive border-destructive/20",
+  PROCESSED: "bg-foreground/[0.04] text-foreground border-foreground/10",
+  INITIATED: "bg-foreground/[0.04] text-muted-foreground border-foreground/10",
+  TAX_WITHHELD: "bg-foreground/[0.04] text-foreground border-foreground/10",
+  YIELD_ACTIVE: "bg-foreground/[0.04] text-foreground border-foreground/10",
+  FAILED_EXECUTION: "bg-destructive/10 text-destructive border-destructive/20",
 };
 
 const Transactions = () => {
+  const { isConnected } = useWallet();
   const [filter, setFilter] = useState<string>("all");
-  const filtered = filter === "all" ? all : all.filter(t => t.status === filter);
+  const [transactions, setTransactions] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const fetchTransactions = async () => {
+    if (!isConnected) return;
+    setIsLoading(true);
+    try {
+      const data = await api.get<any[]>(API_ENDPOINTS.payroll.list);
+      setTransactions(data);
+    } catch (error) {
+      console.error("Failed to fetch transactions", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchTransactions();
+  }, [isConnected]);
+
+  const filtered = filter === "all" ? transactions : transactions.filter(t => t.status === filter);
 
   return (
     <DashboardShell
       title="Transactions"
       subtitle="Every payment, deposit, and withdrawal in one timeline."
       actions={
-        <GlowButton variant="outline">
-          <Download className="w-4 h-4" /> Export
+        <GlowButton variant="outline" onClick={fetchTransactions} disabled={isLoading}>
+          {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
+          Refresh
         </GlowButton>
       }
     >
@@ -41,19 +58,19 @@ const Transactions = () => {
             <Search className="w-4 h-4 text-muted-foreground" />
             <input placeholder="Search transactions…" className="bg-transparent outline-none text-sm flex-1 min-w-0" />
           </div>
-          <div className="flex gap-2">
-            {["all", "success", "pending", "failed"].map((s) => (
+          <div className="flex gap-2 overflow-x-auto pb-2 sm:pb-0">
+            {["all", "PROCESSED", "INITIATED", "FAILED_EXECUTION"].map((s) => (
               <button
                 key={s}
                 onClick={() => setFilter(s)}
                 className={cn(
-                  "h-10 px-3.5 rounded-xl text-xs font-medium transition-colors capitalize",
+                  "h-10 px-3.5 rounded-xl text-xs font-medium transition-colors whitespace-nowrap",
                   filter === s
                     ? "bg-foreground text-background"
                     : "glass-subtle text-muted-foreground hover:text-foreground"
                 )}
               >
-                {s}
+                {s === "all" ? "All" : s.replace("_", " ")}
               </button>
             ))}
           </div>
@@ -64,41 +81,44 @@ const Transactions = () => {
             <thead>
               <tr className="text-left text-[10px] uppercase tracking-wider text-muted-foreground border-b border-foreground/10">
                 <th className="py-3 pr-4 font-semibold">Description</th>
-                <th className="py-3 pr-4 font-semibold hidden md:table-cell">Reference</th>
+                <th className="py-3 pr-4 font-semibold hidden md:table-cell">Recipient</th>
                 <th className="py-3 pr-4 font-semibold hidden sm:table-cell">Date</th>
                 <th className="py-3 pr-4 font-semibold">Status</th>
                 <th className="py-3 font-semibold text-right">Amount</th>
               </tr>
             </thead>
             <tbody>
-              {filtered.map((t) => (
-                <tr key={t.id} className="border-b border-foreground/5 hover:bg-foreground/[0.02]">
-                  <td className="py-4 pr-4">
-                    <div className="flex items-center gap-3">
-                      <div className={cn(
-                        "w-9 h-9 rounded-xl flex items-center justify-center",
-                        t.amount > 0 ? "bg-foreground/[0.04] border border-foreground/10" : "bg-foreground text-background"
-                      )}>
-                        {t.amount > 0 ? <ArrowDownLeft className="w-4 h-4" /> : <ArrowUpRight className="w-4 h-4" />}
+              {isLoading ? (
+                <tr><td colSpan={5} className="py-10 text-center"><Loader2 className="w-6 h-6 animate-spin mx-auto opacity-20" /></td></tr>
+              ) : filtered.length === 0 ? (
+                <tr><td colSpan={5} className="py-10 text-center text-muted-foreground">No transactions found.</td></tr>
+              ) : (
+                filtered.map((t) => (
+                  <tr key={t.id} className="border-b border-foreground/5 hover:bg-foreground/[0.02]">
+                    <td className="py-4 pr-4">
+                      <div className="flex items-center gap-3">
+                        <div className="w-9 h-9 rounded-xl flex items-center justify-center bg-foreground text-background">
+                          <ArrowUpRight className="w-4 h-4" />
+                        </div>
+                        <div className="min-w-0">
+                          <p className="font-medium truncate">Payroll Payment</p>
+                          <p className="text-[11px] text-muted-foreground font-mono truncate max-w-[100px]">{t.transactionHash || t.id}</p>
+                        </div>
                       </div>
-                      <div className="min-w-0">
-                        <p className="font-medium truncate">{t.name}</p>
-                        <p className="text-[11px] text-muted-foreground font-mono">{t.id}</p>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="py-4 pr-4 text-muted-foreground hidden md:table-cell">{t.employee}</td>
-                  <td className="py-4 pr-4 text-muted-foreground hidden sm:table-cell">{t.date}</td>
-                  <td className="py-4 pr-4">
-                    <span className={cn("inline-flex items-center text-[11px] font-medium border rounded-full px-2.5 py-1 capitalize", statusStyles[t.status])}>
-                      {t.status}
-                    </span>
-                  </td>
-                  <td className={cn("py-4 text-right font-semibold", t.amount > 0 ? "text-foreground" : "text-muted-foreground")}>
-                    {t.amount > 0 ? "+" : "−"}${Math.abs(t.amount).toLocaleString()}
-                  </td>
-                </tr>
-              ))}
+                    </td>
+                    <td className="py-4 pr-4 text-muted-foreground hidden md:table-cell">{t.employee?.name || "Unknown"}</td>
+                    <td className="py-4 pr-4 text-muted-foreground hidden sm:table-cell">{new Date(t.createdAt).toLocaleDateString()}</td>
+                    <td className="py-4 pr-4">
+                      <span className={cn("inline-flex items-center text-[10px] font-medium border rounded-full px-2.5 py-1", statusStyles[t.status] || statusStyles.INITIATED)}>
+                        {t.status.replace("_", " ")}
+                      </span>
+                    </td>
+                    <td className="py-4 text-right font-semibold text-muted-foreground">
+                      −${t.amount.toLocaleString()}
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>

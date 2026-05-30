@@ -35,15 +35,50 @@ npm install
    npm run dev
    ```
 
+## Development Workflow
+
+### Smart Contracts
+- Located in `programs/`.
+- Built using Anchor.
+- To build: `anchor build`
+- To test: `anchor test`
+
+### Backend
+- Located in `apps/server`.
+- To run tests: `npm run test --workspace=@aura/server`
+- Prisma Studio: `npm run prisma:studio --workspace=@aura/server`
+
+### Frontend
+- Located in `apps/frontend`.
+- Built with Vite and React.
+- To run: `npm run dev --workspace=@aura/frontend`
+
 ## Key Features Implemented
 - **Monorepo Tooling**: Turborepo for optimized builds and caching.
 - **Domain-Driven Backend**: Modular structure for Payroll, Tax, Employee, and Compliance.
-- **Solana Layer**: Decoupled blockchain interaction layer (`apps/server/src/solana`).
-- **Fiat Bridge**: Ready-to-implement integration layer for INR/USD ↔ USDC.
+- **Solana Layer**: Decoupled blockchain interaction layer calling custom Anchor programs.
+- **Smart Contracts**: Anchor programs for `payroll_program` and `tax_vault_program` with core logic implemented.
+- **Bulk Payroll**: Support for batching multiple employee payments in a single session.
+- **Tax Rules Engine**: Region-aware tax calculation (India, US, and fallback).
+- **Yield Integration**: Automated yield allocation events after tax withholding.
 - **Security**: Wallet-based authentication with JWT session management.
-- **Database**: PostgreSQL with Prisma ORM for reliable Web2 data management.
+- **Database**: PostgreSQL with Prisma ORM, including a seeding script for demo data.
 
 ## Next Steps
-- Implement logic in `apps/server/src/modules/payroll` to link on-chain transactions with DB records.
-- Initialize Solana programs in the `programs/` directory using `anchor init aura_payroll`.
-- Define shared types in `packages/types` to be used across frontend and backend.
+1. Start the database and redis:
+   ```bash
+   docker-compose up -d
+   ```
+2. Run Prisma migrations and seed the database:
+   ```bash
+   npm run prisma:generate --workspace=@aura/server
+   npm run prisma:seed --workspace=@aura/server # Needs manual setup of seed script in package.json if not using prisma seed
+   ```
+3. Start the development environment:
+   ```bash
+   npm run dev
+   ```
+4. Deploy Solana programs to devnet (if Anchor is installed):
+   ```bash
+   anchor deploy
+   ```

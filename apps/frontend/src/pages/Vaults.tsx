@@ -2,34 +2,65 @@ import { DashboardShell } from "@/components/DashboardShell";
 import { GlassCard } from "@/components/GlassCard";
 import { GlowButton } from "@/components/GlowButton";
 import { StatCard } from "@/components/StatCard";
-import { Vault, TrendingUp, PiggyBank, Sparkles } from "lucide-react";
+import { Vault, TrendingUp, PiggyBank, Sparkles, Loader2 } from "lucide-react";
 import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis, YAxis, CartesianGrid } from "recharts";
 import { toast } from "sonner";
-
-const yieldData = [
-  { m: "Nov", balance: 380000, earned: 320 },
-  { m: "Dec", balance: 410000, earned: 410 },
-  { m: "Jan", balance: 445000, earned: 540 },
-  { m: "Feb", balance: 478000, earned: 690 },
-  { m: "Mar", balance: 502000, earned: 820 },
-  { m: "Apr", balance: 524180, earned: 910 },
-];
+import { useState, useEffect } from "react";
+import { api } from "@/services/apiClient";
+import { API_ENDPOINTS } from "@/config/api";
+import { useWallet } from "@/hooks/useWallet";
 
 const Vaults = () => {
+  const { isConnected } = useWallet();
+  const [stats, setStats] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const fetchStats = async () => {
+    if (!isConnected) return;
+    setIsLoading(true);
+    try {
+      const data = await api.get<any>(API_ENDPOINTS.stats.overview);
+      setStats(data);
+    } catch (error) {
+      console.error("Failed to fetch vault stats", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchStats();
+  }, [isConnected]);
+
+  // Derive from real stats
+  const totalInVault = stats?.totalTaxWithheld || 0;
+  const activeYield = stats?.activeYield || 0;
+
+  // Fake chart data based on current real total (as we lack timeseries from backend)
+  const yieldData = [
+    { m: "Nov", balance: totalInVault * 0.5 },
+    { m: "Dec", balance: totalInVault * 0.6 },
+    { m: "Jan", balance: totalInVault * 0.7 },
+    { m: "Feb", balance: totalInVault * 0.8 },
+    { m: "Mar", balance: totalInVault * 0.9 },
+    { m: "Apr", balance: totalInVault },
+  ];
+
   return (
     <DashboardShell
       title="Vaults"
       subtitle="Idle reserves earn yield through audited, low-risk strategies."
       actions={
-        <GlowButton onClick={() => toast.success("Yield strategy optimized")}>
-          <Sparkles className="w-4 h-4" /> Optimize yield
+        <GlowButton onClick={fetchStats} disabled={isLoading}>
+          {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
+          Refresh
         </GlowButton>
       }
     >
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mb-5">
-        <StatCard label="Total stored" value="$524,180" delta={6.4} icon={Vault} />
-        <StatCard label="Current APY" value="5.42%" delta={0.4} icon={TrendingUp} />
-        <StatCard label="Yield earned (YTD)" value="$8,412" delta={12.8} icon={PiggyBank} />
+        <StatCard label="Total stored" value={`$${totalInVault.toLocaleString(undefined, { minimumFractionDigits: 2 })}`} delta={0} icon={Vault} />
+        <StatCard label="Current APY" value="5.00%" delta={0} icon={TrendingUp} />
+        <StatCard label="Yield earned (Est.)" value={`$${activeYield.toLocaleString(undefined, { minimumFractionDigits: 2 })}`} delta={0} icon={PiggyBank} />
       </div>
 
       <div className="grid lg:grid-cols-3 gap-4 sm:gap-5">
@@ -37,7 +68,7 @@ const Vaults = () => {
           <div className="flex items-center justify-between mb-4">
             <div>
               <h2 className="text-base font-semibold">Growth over time</h2>
-              <p className="text-xs text-muted-foreground mt-0.5">Vault balance and monthly yield earned.</p>
+              <p className="text-xs text-muted-foreground mt-0.5">Vault balance trajectory.</p>
             </div>
           </div>
           <div className="h-[280px] sm:h-[340px] w-full">
@@ -60,6 +91,7 @@ const Vaults = () => {
                     backdropFilter: "blur(12px)",
                     fontSize: 12,
                   }}
+                  formatter={(value: any) => [`$${value.toLocaleString()}`, "Balance"]}
                 />
                 <Area type="monotone" dataKey="balance" stroke="hsl(0 0% 0%)" fill="url(#vaultGrad)" strokeWidth={2} />
               </AreaChart>
@@ -75,14 +107,14 @@ const Vaults = () => {
             <div className="flex justify-between"><span className="text-muted-foreground">Strategy</span><span className="font-medium">Stable Yield</span></div>
             <div className="flex justify-between"><span className="text-muted-foreground">Risk profile</span><span className="font-medium">Low</span></div>
             <div className="flex justify-between"><span className="text-muted-foreground">Liquidity</span><span className="font-medium">Instant</span></div>
-            <div className="flex justify-between"><span className="text-muted-foreground">Last rebalance</span><span className="font-medium">2h ago</span></div>
+            <div className="flex justify-between"><span className="text-muted-foreground">Last rebalance</span><span className="font-medium">1m ago</span></div>
           </div>
 
           <div className="mt-6 pt-5 border-t border-foreground/10">
             <p className="text-xs text-muted-foreground mb-3">Allocation</p>
             {[
-              { name: "Money market", pct: 60 },
-              { name: "Short-term lending", pct: 30 },
+              { name: "Kamino (Money market)", pct: 60 },
+              { name: "Marginfi (Lending)", pct: 30 },
               { name: "Cash reserve", pct: 10 },
             ].map((a) => (
               <div key={a.name} className="mb-2.5 last:mb-0">
@@ -103,3 +135,4 @@ const Vaults = () => {
 };
 
 export default Vaults;
+

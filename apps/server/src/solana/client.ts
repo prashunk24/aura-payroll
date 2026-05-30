@@ -9,6 +9,9 @@ const endpoint = process.env.SOLANA_RPC_URL || clusterApiUrl(network);
 export const connection = new Connection(endpoint, 'confirmed');
 
 export const getAuraProgramId = () => {
-  // Placeholder for the actual program ID once deployed
-  return process.env.AURA_PROGRAM_ID || 'AuraPayrollProgram11111111111111111111111';
+  return process.env.AURA_PROGRAM_ID || 'BMCyG8PxXGVED95NGmYZLKT1jTPmjmGWpRPtLtqaB4EV';
+};
+
+export const getTaxVaultProgramId = () => {
+  return process.env.TAX_VAULT_PROGRAM_ID || 'CwUy1nfdAQAHTXM1ehmRhdjeHdECBUSRJadHACeKXJo5';
 };
