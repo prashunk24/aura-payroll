@@ -23,31 +23,47 @@ import { api } from "@/services/apiClient";
 import { API_ENDPOINTS } from "@/config/api";
 import { useWallet } from "@/hooks/useWallet";
 
+const DEFAULT_STATS = {
+  totalPayroll: 0,
+  totalEmployees: 0,
+  totalTaxWithheld: 0,
+  activeYield: 0,
+};
+
+const money = (v: unknown) =>
+  `$${(typeof v === "number" && Number.isFinite(v) ? v : 0).toLocaleString()}`;
+
 const Dashboard = () => {
   const { isConnected } = useWallet();
   const [runOpen, setRunOpen] = useState(false);
-  const [stats, setStats] = useState<any>({
-    totalPayroll: 0,
-    totalEmployees: 0,
-    totalTaxWithheld: 0,
-    activeYield: 0
-  });
-
-  const fetchStats = async () => {
-    if (!isConnected) return;
-    try {
-      const data = await api.get<any>(API_ENDPOINTS.stats.overview);
-      setStats(data);
-    } catch (error) {
-      console.error("Failed to fetch stats", error);
-    }
-  };
+  const [stats, setStats] = useState(DEFAULT_STATS);
 
   useEffect(() => {
+    if (!isConnected) return;
+    let cancelled = false;
+    let failures = 0;
+
+    const fetchStats = async () => {
+      try {
+        const data = await api.get<Partial<typeof DEFAULT_STATS>>(API_ENDPOINTS.stats.overview);
+        if (cancelled) return;
+        failures = 0;
+        setStats({ ...DEFAULT_STATS, ...(data ?? {}) });
+      } catch {
+        // Backend offline: stop polling after a few tries instead of hammering it
+        failures += 1;
+        if (failures >= 3) clearInterval(interval);
+      }
+    };
+
     fetchStats();
     const interval = setInterval(fetchStats, 10000);
-    return () => clearInterval(interval);
+    return () => {
+      cancelled = true;
+      clearInterval(interval);
+    };
   }, [isConnected]);
+
 
   return (
     <DashboardShell
