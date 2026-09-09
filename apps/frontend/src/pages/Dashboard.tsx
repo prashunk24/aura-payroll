@@ -95,10 +95,10 @@ const Dashboard = () => {
 
       {/* Top metrics */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6">
-        <StatCard label="Total payroll" value={`$${stats.totalPayroll.toLocaleString()}`} icon={Wallet} />
-        <StatCard label="Employees paid" value={stats.totalEmployees.toString()} icon={Users} />
-        <StatCard label="Tax withheld" value={`$${stats.totalTaxWithheld.toLocaleString()}`} icon={Receipt} />
-        <StatCard label="Yield earned" value={`$${stats.activeYield.toLocaleString()}`} icon={TrendingUp} />
+        <StatCard label="Total payroll" value={money(stats.totalPayroll)} icon={Wallet} />
+        <StatCard label="Employees paid" value={String(stats.totalEmployees ?? 0)} icon={Users} />
+        <StatCard label="Tax withheld" value={money(stats.totalTaxWithheld)} icon={Receipt} />
+        <StatCard label="Yield earned" value={money(stats.activeYield)} icon={TrendingUp} />
       </div>
 
       {/* Salary split + Upcoming */}
