@@ -111,22 +111,22 @@ export function useWallet() {
 
   const disconnect = useCallback(async () => {
     if (isMock) {
-      localStorage.removeItem("aura_mock_wallet");
+      writeLocal("aura_mock_wallet", null);
       setIsMock(false);
-      window.dispatchEvent(new Event("storage"));
+      if (isBrowser()) window.dispatchEvent(new Event("storage"));
       return;
     }
     try {
-      await adapterDisconnect();
+      await adapterDisconnect?.();
     } catch {
-      /* noop */
+      /* wallet extension missing or user rejected */
     }
   }, [adapterDisconnect, isMock]);
 
   const connectMock = useCallback(() => {
-    localStorage.setItem("aura_mock_wallet", "true");
+    writeLocal("aura_mock_wallet", "true");
     setIsMock(true);
-    window.dispatchEvent(new Event("storage"));
+    if (isBrowser()) window.dispatchEvent(new Event("storage"));
   }, []);
 
   const signTransaction = useCallback(async (tx: any) => {
