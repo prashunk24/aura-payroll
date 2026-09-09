@@ -17,22 +17,45 @@ const MOCK_ADDRESS = "3gzpxbhT6UXT7cU8CLateSwEz1Wr23CsZNU8TnjJ75fy";
  * Thin wrapper over @solana/wallet-adapter-react keeping the existing
  * UI API stable. Supports a "Mock Mode" for development.
  */
-export function useWallet() {
-  const { 
-    publicKey, 
-    connecting, 
-    connected, 
-    disconnect: adapterDisconnect, 
-    wallet,
-    signTransaction: adapterSignTransaction,
-    sendTransaction: adapterSendTransaction
-  } = useSolanaWallet();
+const isBrowser = () => typeof window !== "undefined";
 
-  const [isMock, setIsMock] = useState(() => localStorage.getItem("aura_mock_wallet") === "true");
+const readLocal = (key: string) => {
+  if (!isBrowser()) return null;
+  try {
+    return window.localStorage.getItem(key);
+  } catch {
+    return null;
+  }
+};
+
+const writeLocal = (key: string, value: string | null) => {
+  if (!isBrowser()) return;
+  try {
+    if (value === null) window.localStorage.removeItem(key);
+    else window.localStorage.setItem(key, value);
+  } catch {
+    /* storage unavailable (private mode) */
+  }
+};
+
+export function useWallet() {
+  const adapter = useSolanaWallet() ?? ({} as ReturnType<typeof useSolanaWallet>);
+  const {
+    publicKey = null,
+    connecting = false,
+    connected = false,
+    disconnect: adapterDisconnect,
+    wallet = null,
+    signTransaction: adapterSignTransaction,
+    sendTransaction: adapterSendTransaction,
+  } = adapter;
+
+  const [isMock, setIsMock] = useState(() => readLocal("aura_mock_wallet") === "true");
 
   useEffect(() => {
+    if (!isBrowser()) return;
     const handleStorage = () => {
-      setIsMock(localStorage.getItem("aura_mock_wallet") === "true");
+      setIsMock(readLocal("aura_mock_wallet") === "true");
     };
     window.addEventListener("storage", handleStorage);
     return () => window.removeEventListener("storage", handleStorage);
