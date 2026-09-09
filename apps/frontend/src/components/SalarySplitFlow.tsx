@@ -2,18 +2,23 @@ import { motion } from "framer-motion";
 import { Wallet, Users, Vault, TrendingUp } from "lucide-react";
 
 interface SalarySplitFlowProps {
-  total: number;
-  taxRate: number; // percentage
+  total?: number;
+  taxRate?: number; // percentage
   yieldRate?: number; // % of tax routed to yield strategy
 }
 
-const fmt = (n: number) =>
-  n.toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 });
+const num = (v: unknown, fallback = 0) =>
+  typeof v === "number" && Number.isFinite(v) ? v : fallback;
 
-export const SalarySplitFlow = ({ total, taxRate, yieldRate = 100 }: SalarySplitFlowProps) => {
-  const tax = (total * taxRate) / 100;
-  const net = total - tax;
-  const toYield = (tax * yieldRate) / 100;
+const fmt = (n: unknown) =>
+  num(n).toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 });
+
+export const SalarySplitFlow = ({ total = 0, taxRate = 0, yieldRate = 100 }: SalarySplitFlowProps) => {
+  const safeTotal = num(total);
+  const safeRate = Math.min(100, Math.max(0, num(taxRate)));
+  const tax = (safeTotal * safeRate) / 100;
+  const net = safeTotal - tax;
+  const toYield = (tax * num(yieldRate, 100)) / 100;
 
   return (
     <div className="relative w-full">
