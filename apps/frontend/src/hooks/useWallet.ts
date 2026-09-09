@@ -63,26 +63,41 @@ export function useWallet() {
 
   const address = useMemo(() => {
     if (isMock) return MOCK_ADDRESS;
-    return publicKey?.toBase58() ?? null;
+    try {
+      return publicKey?.toBase58() ?? null;
+    } catch {
+      return null;
+    }
   }, [publicKey, isMock]);
 
-  // Auto-login to fetch JWT token
+  // Auto-login to fetch JWT token (once per address, never blocks render)
   useEffect(() => {
-    if (address) {
-      api.post<{token: string}>(API_ENDPOINTS.auth.login, {
-        walletAddress: address,
-        signature: 'mock_signature_for_now',
-        message: 'login_request'
-      }).then(res => {
-        if (res.token) {
-          localStorage.setItem('auth_token', res.token);
-        }
-      }).catch(err => {
-        console.error("Failed to authenticate wallet with backend", err);
-      });
-    } else {
-      localStorage.removeItem('auth_token');
+    if (!isBrowser()) return;
+    if (!address) {
+      writeLocal("auth_token", null);
+      return;
     }
+    if (loginAttempts.has(address)) return;
+    loginAttempts.add(address);
+
+    let cancelled = false;
+    api
+      .post<{ token?: string }>(API_ENDPOINTS.auth.login, {
+        walletAddress: address,
+        signature: "mock_signature_for_now",
+        message: "login_request",
+      })
+      .then((res) => {
+        if (cancelled || !res?.token) return;
+        writeLocal("auth_token", res.token);
+      })
+      .catch(() => {
+        loginAttempts.delete(address);
+      });
+
+    return () => {
+      cancelled = true;
+    };
   }, [address]);
 
   const status: WalletStatus = connecting
