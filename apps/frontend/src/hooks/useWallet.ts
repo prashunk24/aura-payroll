@@ -17,6 +17,9 @@ const MOCK_ADDRESS = "3gzpxbhT6UXT7cU8CLateSwEz1Wr23CsZNU8TnjJ75fy";
  * Thin wrapper over @solana/wallet-adapter-react keeping the existing
  * UI API stable. Supports a "Mock Mode" for development.
  */
+/** Addresses we've already tried to authenticate, shared across hook instances. */
+const loginAttempts = new Set<string>();
+
 const isBrowser = () => typeof window !== "undefined";
 
 const readLocal = (key: string) => {
