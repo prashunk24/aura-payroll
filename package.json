@@ -3,8 +3,11 @@
   "private": true,
   "packageManager": "npm@11.12.1",
   "scripts": {
-    "build": "turbo build",
-    "dev": "turbo dev",
+    "build": "vite build --config apps/frontend/vite.config.ts --outDir ../../dist --emptyOutDir apps/frontend",
+    "build:dev": "vite build --mode development --config apps/frontend/vite.config.ts --outDir ../../dist --emptyOutDir apps/frontend",
+    "build:all": "turbo build",
+    "dev": "vite --config apps/frontend/vite.config.ts apps/frontend",
+    "dev:all": "turbo dev",
     "lint": "turbo lint",
     "test": "turbo test",
     "install-all": "npm install"
