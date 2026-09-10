@@ -30,6 +30,12 @@ export const API_ENDPOINTS = {
     list: "/api/employee/list",
     add: "/api/employee/add",
   },
+  // Tax vault
+  tax: {
+    deposit: "/api/tax/deposit",
+    withdraw: "/api/tax/withdraw",
+    yield: "/api/tax/yield",
+  },
   // Stats
   stats: {
     overview: "/api/stats/overview",
