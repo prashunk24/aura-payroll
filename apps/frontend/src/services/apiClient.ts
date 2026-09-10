@@ -7,14 +7,7 @@ export async function apiRequest<T = unknown>(
 ): Promise<T> {
   const url = path.startsWith("http") ? path : `${API_BASE_URL}${path}`;
   
-  let token: string | null = null;
-  if (typeof window !== "undefined") {
-    try {
-      token = window.localStorage.getItem("auth_token");
-    } catch {
-      token = null;
-    }
-  }
+  const token = localStorage.getItem('auth_token');
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
   };

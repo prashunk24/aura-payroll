@@ -58,8 +58,8 @@ const Landing = () => {
           </div>
 
           {/* Hero glass card */}
-          <div className="lg:col-span-5 relative">
-            <div>
+          <div className="lg:col-span-5 relative animate-scale-in">
+            <div className="float">
               <GlassCard variant="strong" glow="primary">
                 <div className="flex items-center justify-between gap-3 mb-5">
                   <div className="min-w-0">

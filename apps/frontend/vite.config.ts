@@ -13,16 +13,9 @@ export default defineConfig(({ mode }) => ({
     },
   },
   plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),
-  define: {
-    global: "globalThis",
-  },
-  optimizeDeps: {
-    include: ["buffer"],
-  },
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
-      buffer: path.resolve(__dirname, "../../node_modules/buffer/index.js"),
     },
     dedupe: ["react", "react-dom", "react/jsx-runtime", "react/jsx-dev-runtime", "@tanstack/react-query", "@tanstack/query-core"],
   },

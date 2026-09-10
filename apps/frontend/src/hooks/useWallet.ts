@@ -17,48 +17,22 @@ const MOCK_ADDRESS = "3gzpxbhT6UXT7cU8CLateSwEz1Wr23CsZNU8TnjJ75fy";
  * Thin wrapper over @solana/wallet-adapter-react keeping the existing
  * UI API stable. Supports a "Mock Mode" for development.
  */
-/** Addresses we've already tried to authenticate, shared across hook instances. */
-const loginAttempts = new Set<string>();
-
-const isBrowser = () => typeof window !== "undefined";
-
-const readLocal = (key: string) => {
-  if (!isBrowser()) return null;
-  try {
-    return window.localStorage.getItem(key);
-  } catch {
-    return null;
-  }
-};
-
-const writeLocal = (key: string, value: string | null) => {
-  if (!isBrowser()) return;
-  try {
-    if (value === null) window.localStorage.removeItem(key);
-    else window.localStorage.setItem(key, value);
-  } catch {
-    /* storage unavailable (private mode) */
-  }
-};
-
 export function useWallet() {
-  const adapter = useSolanaWallet() ?? ({} as ReturnType<typeof useSolanaWallet>);
-  const {
-    publicKey = null,
-    connecting = false,
-    connected = false,
-    disconnect: adapterDisconnect,
-    wallet = null,
+  const { 
+    publicKey, 
+    connecting, 
+    connected, 
+    disconnect: adapterDisconnect, 
+    wallet,
     signTransaction: adapterSignTransaction,
-    sendTransaction: adapterSendTransaction,
-  } = adapter;
+    sendTransaction: adapterSendTransaction
+  } = useSolanaWallet();
 
-  const [isMock, setIsMock] = useState(() => readLocal("aura_mock_wallet") === "true");
+  const [isMock, setIsMock] = useState(() => localStorage.getItem("aura_mock_wallet") === "true");
 
   useEffect(() => {
-    if (!isBrowser()) return;
     const handleStorage = () => {
-      setIsMock(readLocal("aura_mock_wallet") === "true");
+      setIsMock(localStorage.getItem("aura_mock_wallet") === "true");
     };
     window.addEventListener("storage", handleStorage);
     return () => window.removeEventListener("storage", handleStorage);
@@ -66,41 +40,26 @@ export function useWallet() {
 
   const address = useMemo(() => {
     if (isMock) return MOCK_ADDRESS;
-    try {
-      return publicKey?.toBase58() ?? null;
-    } catch {
-      return null;
-    }
+    return publicKey?.toBase58() ?? null;
   }, [publicKey, isMock]);
 
-  // Auto-login to fetch JWT token (once per address, never blocks render)
+  // Auto-login to fetch JWT token
   useEffect(() => {
-    if (!isBrowser()) return;
-    if (!address) {
-      writeLocal("auth_token", null);
-      return;
-    }
-    if (loginAttempts.has(address)) return;
-    loginAttempts.add(address);
-
-    let cancelled = false;
-    api
-      .post<{ token?: string }>(API_ENDPOINTS.auth.login, {
+    if (address) {
+      api.post<{token: string}>(API_ENDPOINTS.auth.login, {
         walletAddress: address,
-        signature: "mock_signature_for_now",
-        message: "login_request",
-      })
-      .then((res) => {
-        if (cancelled || !res?.token) return;
-        writeLocal("auth_token", res.token);
-      })
-      .catch(() => {
-        loginAttempts.delete(address);
+        signature: 'mock_signature_for_now',
+        message: 'login_request'
+      }).then(res => {
+        if (res.token) {
+          localStorage.setItem('auth_token', res.token);
+        }
+      }).catch(err => {
+        console.error("Failed to authenticate wallet with backend", err);
       });
-
-    return () => {
-      cancelled = true;
-    };
+    } else {
+      localStorage.removeItem('auth_token');
+    }
   }, [address]);
 
   const status: WalletStatus = connecting
@@ -111,22 +70,22 @@ export function useWallet() {
 
   const disconnect = useCallback(async () => {
     if (isMock) {
-      writeLocal("aura_mock_wallet", null);
+      localStorage.removeItem("aura_mock_wallet");
       setIsMock(false);
-      if (isBrowser()) window.dispatchEvent(new Event("storage"));
+      window.dispatchEvent(new Event("storage"));
       return;
     }
     try {
-      await adapterDisconnect?.();
+      await adapterDisconnect();
     } catch {
-      /* wallet extension missing or user rejected */
+      /* noop */
     }
   }, [adapterDisconnect, isMock]);
 
   const connectMock = useCallback(() => {
-    writeLocal("aura_mock_wallet", "true");
+    localStorage.setItem("aura_mock_wallet", "true");
     setIsMock(true);
-    if (isBrowser()) window.dispatchEvent(new Event("storage"));
+    window.dispatchEvent(new Event("storage"));
   }, []);
 
   const signTransaction = useCallback(async (tx: any) => {
@@ -145,8 +104,8 @@ export function useWallet() {
     status,
     isConnected: connected || isMock,
     isMock,
-    walletName: isMock ? "Dev Wallet" : (wallet?.adapter?.name ?? null),
-    walletIcon: isMock ? null : (wallet?.adapter?.icon ?? null),
+    walletName: isMock ? "Dev Wallet" : (wallet?.adapter.name ?? null),
+    walletIcon: isMock ? null : (wallet?.adapter.icon ?? null),
     disconnect,
     connectMock,
     signTransaction,

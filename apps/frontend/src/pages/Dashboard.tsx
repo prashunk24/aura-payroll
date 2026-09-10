@@ -23,47 +23,31 @@ import { api } from "@/services/apiClient";
 import { API_ENDPOINTS } from "@/config/api";
 import { useWallet } from "@/hooks/useWallet";
 
-const DEFAULT_STATS = {
-  totalPayroll: 0,
-  totalEmployees: 0,
-  totalTaxWithheld: 0,
-  activeYield: 0,
-};
-
-const money = (v: unknown) =>
-  `$${(typeof v === "number" && Number.isFinite(v) ? v : 0).toLocaleString()}`;
-
 const Dashboard = () => {
   const { isConnected } = useWallet();
   const [runOpen, setRunOpen] = useState(false);
-  const [stats, setStats] = useState(DEFAULT_STATS);
+  const [stats, setStats] = useState<any>({
+    totalPayroll: 0,
+    totalEmployees: 0,
+    totalTaxWithheld: 0,
+    activeYield: 0
+  });
+
+  const fetchStats = async () => {
+    if (!isConnected) return;
+    try {
+      const data = await api.get<any>(API_ENDPOINTS.stats.overview);
+      setStats(data);
+    } catch (error) {
+      console.error("Failed to fetch stats", error);
+    }
+  };
 
   useEffect(() => {
-    if (!isConnected) return;
-    let cancelled = false;
-    let failures = 0;
-
-    const fetchStats = async () => {
-      try {
-        const data = await api.get<Partial<typeof DEFAULT_STATS>>(API_ENDPOINTS.stats.overview);
-        if (cancelled) return;
-        failures = 0;
-        setStats({ ...DEFAULT_STATS, ...(data ?? {}) });
-      } catch {
-        // Backend offline: stop polling after a few tries instead of hammering it
-        failures += 1;
-        if (failures >= 3) clearInterval(interval);
-      }
-    };
-
     fetchStats();
     const interval = setInterval(fetchStats, 10000);
-    return () => {
-      cancelled = true;
-      clearInterval(interval);
-    };
+    return () => clearInterval(interval);
   }, [isConnected]);
-
 
   return (
     <DashboardShell
@@ -95,10 +79,10 @@ const Dashboard = () => {
 
       {/* Top metrics */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6">
-        <StatCard label="Total payroll" value={money(stats.totalPayroll)} icon={Wallet} />
-        <StatCard label="Employees paid" value={String(stats.totalEmployees ?? 0)} icon={Users} />
-        <StatCard label="Tax withheld" value={money(stats.totalTaxWithheld)} icon={Receipt} />
-        <StatCard label="Yield earned" value={money(stats.activeYield)} icon={TrendingUp} />
+        <StatCard label="Total payroll" value={`$${stats.totalPayroll.toLocaleString()}`} icon={Wallet} />
+        <StatCard label="Employees paid" value={stats.totalEmployees.toString()} icon={Users} />
+        <StatCard label="Tax withheld" value={`$${stats.totalTaxWithheld.toLocaleString()}`} icon={Receipt} />
+        <StatCard label="Yield earned" value={`$${stats.activeYield.toLocaleString()}`} icon={TrendingUp} />
       </div>
 
       {/* Salary split + Upcoming */}

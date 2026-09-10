@@ -19,7 +19,6 @@ import NotFound from "./pages/NotFound";
 import { SolanaProvider } from "./providers/SolanaProvider";
 import { SmoothScroll } from "./components/SmoothScroll";
 import { PageTransition } from "./components/PageTransition";
-import { ErrorBoundary } from "./components/ErrorBoundary";
 
 const queryClient = new QueryClient();
 
@@ -52,23 +51,19 @@ const AnimatedRoutes = () => {
 };
 
 const App = () => (
-  <ErrorBoundary>
-    <QueryClientProvider client={queryClient}>
-      <SolanaProvider>
-        <TooltipProvider>
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
-            <SmoothScroll>
-              <ErrorBoundary>
-                <AnimatedRoutes />
-              </ErrorBoundary>
-            </SmoothScroll>
-          </BrowserRouter>
-        </TooltipProvider>
-      </SolanaProvider>
-    </QueryClientProvider>
-  </ErrorBoundary>
+  <QueryClientProvider client={queryClient}>
+    <SolanaProvider>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <SmoothScroll>
+            <AnimatedRoutes />
+          </SmoothScroll>
+        </BrowserRouter>
+      </TooltipProvider>
+    </SolanaProvider>
+  </QueryClientProvider>
 );
 
 export default App;
